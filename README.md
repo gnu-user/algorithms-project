@@ -1,4 +1,5 @@
-algorithms-project
+Algorithms Project
 ==================
 
-Algorithms class project implementing convex hull and shortest-path
+Our implementation of algorithmic solutions to the convex hull and shortest-path problems
+assigned for the algorithms project.
