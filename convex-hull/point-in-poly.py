@@ -19,6 +19,7 @@
 #
 from math import sqrt
 from termcolor import colored
+from numpy import dot, arccos
 
 # A function which handles the first edge case for the pnpoly algorithm. If
 # a vector lies on the vertical or horizontal edge between two vertices of the
@@ -106,24 +107,103 @@ def pnpoly(vertices, point):
         i += 1
         
     return inside_poly
+   
+# Calculates the angle between 2 vectors in radians
+def angle_calc(p1,p2,origin):
+	a = Vector(p1.x-origin.x, p1.y-origin.y)
+	b = Vector(p2.x-origin.x, p2.y-origin.y)
+	return arccos((dot([a.x,a.y], [b.x,b.y]))/(a.mag*b.mag))
 
+# Returns the index of the first point of the pair vectors within
+# the hull that result in the maximum interior angle
+
+#TODO check if the angle between 2 points results in 0
+#thefore the point to be added is on the line, take the one further
+#away and remove the other
+#TODO point at origin, does not work since magnitude is 0
+def max_interior_angle(hull, point):
+	i = 0
+	j = len(hull) - 1
+	max_angle = 0
+	angle = 0
+	index = -1	#if returns -1 this is invalid!!!!
+	while(i < len(hull)):
+	   angle = angle_calc(hull[j],hull[i], point)
+	   print("point j {}, point i {}, angle {}".format([hull[j].x, hull[j].y], [hull[i].x, hull[i].y], angle))
+	   if (max_angle < angle):
+		   max_angle = angle
+		   index = j
+	   j = i
+	   i += 1
+	return index
+
+class Vector:
+	x=0
+	y=0
+	mag=0
+	def __init__(self, x, y):
+		self.x = x
+		self.y = y
+		self.mag = sqrt(self.x**2 + self.y**2)
+	
+def init_vectors(points):
+	vectors = []
+	for point in points:
+		vectors.append(Vector(point[0], point[1]))
+	return vectors
+
+def quicksort (list):
+    """
+    Quicksort using list comprehensions
+    >>> qsort1<<docstring test numeric input>>
+    <<docstring test numeric output>>
+    >>> qsort1<<docstring test string input>>
+    <<docstring test string output>>
+    """
+    if list == []: 
+        return []
+    else:
+        pivot = list[0]
+        lesser = quicksort([x for x in list[1:] if x.mag < pivot.mag])
+        greater = quicksort([x for x in list[1:] if x.mag >= pivot.mag])
+        return greater + [pivot] + lesser
+        
+#def dot_product(p1,p2,p3):
+	# Use numbpy
 
 #vertices = [(1,3), (3,2), (4,2), (-2,4), (-5,3), (2,-4), (3,-6), (-5,-9), (-4,-5)]
 
 # Square test case, test points on the line, etc..
-vertices = [(1, 1), (1, 3), (3, 3), (3,1)]
+points = [(1, 1), (1, 3), (3, 3), (3,1)]
 
+#triangle test case
+#points = [(2, 10), (2, -4), (-2, -3)]
+
+vectors = init_vectors(points)
+
+#vectors = quicksort(vectors)
+
+#print(angle_calc(Vector(0,0),Vector(3,4), Vector(3,2)))
+#index = max_interior_angle(vectors, Vector(3, -1))
+
+index = max_interior_angle(vectors, Vector(0.5, 0.5))
+
+print(vectors[index].x, vectors[index].y)
+print(vectors[index+1].x, vectors[index+1].y)
+
+for vector in vectors:
+	print(vector.x, vector.y, vector.mag, "\n")
 # Perform a map to convert all vertices to floating points and user input to float
 # this is the only way to guarantee floating point precision for all operations
-for vertex in vertices:
-    map(float, vertex)
+for point in points:
+    map(float, point)
 
 # Get a user to enter a point
 while True:
     raw_point = input("Enter a point's x and y coordinates: ")
-    point = tuple(map(float,raw_point.split(',')))
+    usr_point = tuple(map(float,raw_point.split(',')))
 
-    if (pnpoly(vertices, point) == True):
+    if (pnpoly(points, usr_point) == True):
         print(colored("The point is within the polygon", 'green'))
     else:
         print(colored("The point is NOT within the polygon",'red'))
