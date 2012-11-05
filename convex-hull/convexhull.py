@@ -25,7 +25,7 @@ while(w < len(points)):
 		if(d >= max_ca):
 			max_ca = d
 			c[0] = w	
-	else if(x < 0 and y > 0):
+	elif(x < 0 and y > 0):
 		print x, y
 		d = (sqrt(points[w][0]*points[w][0] + points[w][1]*points[w][1]))
 		print d
@@ -36,7 +36,7 @@ while(w < len(points)):
 			c[1] = w
 	# Though the third quadrent is 0 inclusive it does not include the origin since the first quadrent already covers it.
 	# The third quadrent covers (0, -i) and (-i, 0) where i > 0
-	else if(x <= 0 and y <= 0 and (x != 0 or y != 0)):
+	elif(x <= 0 and y <= 0 and (x != 0 or y != 0)):
 		print x, y
 		d = (sqrt(points[w][0]*points[w][0] + points[w][1]*points[w][1]))
 		print d
@@ -45,7 +45,7 @@ while(w < len(points)):
 		if(d > max_cc):
 			max_cc = d
 			c[2] = w		
-	else if(x > 0 and y < 0):
+	elif(x > 0 and y < 0):
 		print x, y
 		d = (sqrt(points[w][0]*points[w][0] + points[w][1]*points[w][1]))
 		print d
