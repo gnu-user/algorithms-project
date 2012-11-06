@@ -186,9 +186,11 @@ vectors = init_vectors(points)
 #print(angle_calc(Vector(0,0),Vector(3,4), Vector(3,2)))
 #index = max_interior_angle(vectors, Vector(3, -1))
 
-index = max_interior_angle(vectors, Vector(0.5, 0.5))
+index = max_interior_angle(vectors, Vector(3, 3))
 
 print(vectors[index].x, vectors[index].y)
+if (index + 1 >= len(vectors)):
+	index = -1
 print(vectors[index+1].x, vectors[index+1].y)
 
 for vector in vectors:
