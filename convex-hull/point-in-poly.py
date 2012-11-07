@@ -36,29 +36,29 @@ def vert_horz_edge(vertices, point):
     on_edge = False
     
     # If edge between the vertices forms a horizontal or vertical edge
-    if (((vertices[0][0] == vertices[1][0]) or (vertices[0][1] == vertices[1][1]))):
+    if (((vertices[0].x == vertices[1].x) or (vertices[0].y == vertices[1].y))):
         # Set the x and y edge lower and upper boundaries
-        if (vertices[0][0] > vertices[1][0]):
-            x_upper = vertices[0][0]
-            x_lower = vertices[1][0]
+        if (vertices[0].x > vertices[1].x):
+            x_upper = vertices[0].x
+            x_lower = vertices[1].x
         else:
-            x_upper = vertices[1][0]
-            x_lower = vertices[0][0]
-        if (vertices[0][1] > vertices[1][1]):
-            y_upper = vertices[0][1]
-            y_lower = vertices[1][1]
+            x_upper = vertices[1].x
+            x_lower = vertices[0].x
+        if (vertices[0].y > vertices[1].y):
+            y_upper = vertices[0].y
+            y_lower = vertices[1].y
         else:
-            y_upper = vertices[1][1]
-            y_lower = vertices[0][1]
+            y_upper = vertices[1].y
+            y_lower = vertices[0].y
         
         # If the point lies on the horizonal or vertical line, check if it lies
         # on the edge between the two vertices
-        if (point[0] == vertices[0][0]):
-            if (point[1] >= y_lower and point[1] <= y_upper):
+        if (point.x == vertices[0].x):
+            if (point.y >= y_lower and point.y <= y_upper):
                 on_edge = True
         # If the point lies on the horizontal line
-        elif (point[1] == vertices[0][1]):
-            if (point[0] >= x_lower and point[0] <= x_upper):
+        elif (point.y == vertices[0].y):
+            if (point.x >= x_lower and point.x <= x_upper):
                 on_edge = True
     
     return on_edge
@@ -93,14 +93,14 @@ def pnpoly(vertices, point):
             return True
         # If the vector does not lie on a horizontal or vertical edge then verify
         # that the point is b/w the current and previous vertex y axis
-        elif (((vertices[i][1] > point[1]) != (vertices[j][1] > point[1]))
+        elif (((vertices[i].y > point.y) != (vertices[j].y > point.y))
             # If the point's x value is less than the delta of current and prev.
             # vertex x value mult. by the rate of change of the y values add
             # the current vertex's x value
             # I don't fully understand how this works.. I need to write it out
-            and (point[0] < (vertices[j][0] - vertices[i][0]) * 
-                (point[1] - vertices[i][1]) / (vertices[j][1] - vertices[i][1]) 
-                + vertices[i][0])):
+            and (point.x < (vertices[j].x - vertices[i].x) * 
+                (point.y - vertices[i].y) / (vertices[j].y - vertices[i].y) 
+                + vertices[i].x)):
                     # Inverse the result each time
                     inside_poly = not inside_poly
         j = i
@@ -201,15 +201,23 @@ def quicksort (list):
 def pos_check(vectors, index):
     point = vectors[(index+1)%len(vectors)]
     del(vectors[(index+1)%len(vectors)])
+    print (point.x, point.y)
     if pnpoly(vectors, point):
-        print ("trying to reoccur")
-        #pos_check(vectors, index)
+        #print ("pos", vectors[index-1].x, vectors[index-1].y, index-1)
+        pos_check(vectors, index-1)
     else:
         vectors.insert((index+1)%len(vectors), point)
 
 
 def neg_check(vectors, index):
-    print ("do nothing")
+    point = vectors[(index-1)%len(vectors)]
+    del(vectors[(index-1)%len(vectors)])
+    print (point.x, point.y)
+    if pnpoly(vectors, point):
+        #print ("neg", vectors[index-1].x, vectors[index-1].y, index-1)
+        neg_check(vectors, index-1)
+    else:
+        vectors.insert((index-1)%len(vectors), point)
 
 def convex_check(vectors, index):
     pos_check(vectors,index)
@@ -217,11 +225,12 @@ def convex_check(vectors, index):
     
 
 def add_point(vectors, point):
-    index = max_interior_angle(vectors, point)
-    vectors.insert(index, point)
-    for vector in vectors:
-        print (vector.x, vector.y, vector.mag )
-    convex_check(vectors, index)
+    if !pnpoly(vectors, point):
+        index = max_interior_angle(vectors, point)
+        vectors.insert(index, point)
+        for vector in vectors:
+            print (vector.x, vector.y, vector.mag )
+        convex_check(vectors, index)
 
 
 #def dot_product(p1,p2,p3):
