@@ -36,29 +36,29 @@ def vert_horz_edge(vertices, point):
     on_edge = False
     
     # If edge between the vertices forms a horizontal or vertical edge
-    if (((vertices[0][0] == vertices[1][0]) or (vertices[0][1] == vertices[1][1]))):
+    if (((vertices[0].x == vertices[1].x) or (vertices[0].y == vertices[1].y))):
         # Set the x and y edge lower and upper boundaries
-        if (vertices[0][0] > vertices[1][0]):
-            x_upper = vertices[0][0]
-            x_lower = vertices[1][0]
+        if (vertices[0].x > vertices[1].x):
+            x_upper = vertices[0].x
+            x_lower = vertices[1].x
         else:
-            x_upper = vertices[1][0]
-            x_lower = vertices[0][0]
-        if (vertices[0][1] > vertices[1][1]):
-            y_upper = vertices[0][1]
-            y_lower = vertices[1][1]
+            x_upper = vertices[1].x
+            x_lower = vertices[0].x
+        if (vertices[0].y > vertices[1].y):
+            y_upper = vertices[0].y
+            y_lower = vertices[1].y
         else:
-            y_upper = vertices[1][1]
-            y_lower = vertices[0][1]
+            y_upper = vertices[1].y
+            y_lower = vertices[0].y
         
         # If the point lies on the horizonal or vertical line, check if it lies
         # on the edge between the two vertices
-        if (point[0] == vertices[0][0]):
-            if (point[1] >= y_lower and point[1] <= y_upper):
+        if (point.x == vertices[0].x):
+            if (point.y >= y_lower and point.y <= y_upper):
                 on_edge = True
         # If the point lies on the horizontal line
-        elif (point[1] == vertices[0][1]):
-            if (point[0] >= x_lower and point[0] <= x_upper):
+        elif (point.y == vertices[0].y):
+            if (point.x >= x_lower and point.x <= x_upper):
                 on_edge = True
     
     return on_edge
@@ -93,14 +93,14 @@ def pnpoly(vertices, point):
             return True
         # If the vector does not lie on a horizontal or vertical edge then verify
         # that the point is b/w the current and previous vertex y axis
-        elif (((vertices[i][1] > point[1]) != (vertices[j][1] > point[1]))
+        elif (((vertices[i].y > point.y) != (vertices[j].y > point.y))
             # If the point's x value is less than the delta of current and prev.
             # vertex x value mult. by the rate of change of the y values add
             # the current vertex's x value
             # I don't fully understand how this works.. I need to write it out
-            and (point[0] < (vertices[j][0] - vertices[i][0]) * 
-                (point[1] - vertices[i][1]) / (vertices[j][1] - vertices[i][1]) 
-                + vertices[i][0])):
+            and (point.x < (vertices[j].x - vertices[i].x) * 
+                (point.y - vertices[i].y) / (vertices[j].y - vertices[i].y) 
+                + vertices[i].x)):
                     # Inverse the result each time
                     inside_poly = not inside_poly
         j = i
@@ -170,7 +170,10 @@ def quicksort (list):
         greater = quicksort([x for x in list[1:] if x.mag >= pivot.mag])
         return greater + [pivot] + lesser
 
-
+###############################################################################
+#The following notes no longer apply, they are important however to help with #
+#defining why we are using the current approach.                              #
+###############################################################################
 #Need to take the interior angle of the points the new points connects to
 #The check is if the interior angle is <180 given the addition of the new point
 #   IF the angle is < 180 the point is kept
@@ -198,30 +201,43 @@ def quicksort (list):
 #        vectors.remove((index-1)%len(vectors))
 #        neg_check(vectors, index)
 
+
+#Through use of pnpoly check if given the remove of the point (at index + 1)
+#next to the point at the given index the point will be within the polygon
 def pos_check(vectors, index):
     point = vectors[(index+1)%len(vectors)]
     del(vectors[(index+1)%len(vectors)])
+    #print (point.x, point.y)
     if pnpoly(vectors, point):
-        print ("trying to reoccur")
-        #pos_check(vectors, index)
+        #print ("pos", vectors[index-1].x, vectors[index-1].y, index-1)
+        pos_check(vectors, index-1)
     else:
         vectors.insert((index+1)%len(vectors), point)
 
-
+#Through use of pnpoly check if given the remove of the point (at index - 1)
+#next to the point at the given index the point will be within the polygon
 def neg_check(vectors, index):
-    print ("do nothing")
+    point = vectors[(index-1)%len(vectors)]
+    del(vectors[(index-1)%len(vectors)])
+    #print (point.x, point.y)
+    if pnpoly(vectors, point):
+        #print ("neg", vectors[index-1].x, vectors[index-1].y, index-1)
+        neg_check(vectors, index-1)
+    else:
+        vectors.insert((index-1)%len(vectors), point)
 
 def convex_check(vectors, index):
     pos_check(vectors,index)
     neg_check(vectors,index)
-    
+
 
 def add_point(vectors, point):
-    index = max_interior_angle(vectors, point)
-    vectors.insert(index, point)
-    for vector in vectors:
-        print (vector.x, vector.y, vector.mag )
-    convex_check(vectors, index)
+    if !pnpoly(vectors, point):
+        index = max_interior_angle(vectors, point)
+        vectors.insert(index, point)
+        for vector in vectors:
+            print (vector.x, vector.y, vector.mag )
+        convex_check(vectors, index)
 
 
 #def dot_product(p1,p2,p3):
@@ -255,15 +271,15 @@ for vector in vectors:
     print(vector.x, vector.y, vector.mag )
 # Perform a map to convert all vertices to floating points and user input to float
 # this is the only way to guarantee floating point precision for all operations
-for point in points:
-    map(float, point)
+#for point in points:
+#    map(float, point)
 
 # Get a user to enter a point
-while True:
-    raw_point = input("Enter a point's x and y coordinates: ")
-    usr_point = tuple(map(float,raw_point.split(',')))
-
-    if (pnpoly(points, usr_point) == True):
-        print(colored("The point is within the polygon", 'green'))
-    else:
-        print(colored("The point is NOT within the polygon",'red'))
+#while True:
+#    raw_point = input("Enter a point's x and y coordinates: ")
+#    usr_point = tuple(map(float,raw_point.split(',')))
+#
+#    if (pnpoly(points, usr_point) == True):
+#        print(colored("The point is within the polygon", 'green'))
+#    else:
+#        print(colored("The point is NOT within the polygon",'red'))
