@@ -170,7 +170,10 @@ def quicksort (list):
         greater = quicksort([x for x in list[1:] if x.mag >= pivot.mag])
         return greater + [pivot] + lesser
 
-
+###############################################################################
+#The following notes no longer apply, they are important however to help with #
+#defining why we are using the current approach.                              #
+###############################################################################
 #Need to take the interior angle of the points the new points connects to
 #The check is if the interior angle is <180 given the addition of the new point
 #   IF the angle is < 180 the point is kept
@@ -198,21 +201,25 @@ def quicksort (list):
 #        vectors.remove((index-1)%len(vectors))
 #        neg_check(vectors, index)
 
+
+#Through use of pnpoly check if given the remove of the point (at index + 1)
+#next to the point at the given index the point will be within the polygon
 def pos_check(vectors, index):
     point = vectors[(index+1)%len(vectors)]
     del(vectors[(index+1)%len(vectors)])
-    print (point.x, point.y)
+    #print (point.x, point.y)
     if pnpoly(vectors, point):
         #print ("pos", vectors[index-1].x, vectors[index-1].y, index-1)
         pos_check(vectors, index-1)
     else:
         vectors.insert((index+1)%len(vectors), point)
 
-
+#Through use of pnpoly check if given the remove of the point (at index - 1)
+#next to the point at the given index the point will be within the polygon
 def neg_check(vectors, index):
     point = vectors[(index-1)%len(vectors)]
     del(vectors[(index-1)%len(vectors)])
-    print (point.x, point.y)
+    #print (point.x, point.y)
     if pnpoly(vectors, point):
         #print ("neg", vectors[index-1].x, vectors[index-1].y, index-1)
         neg_check(vectors, index-1)
@@ -222,7 +229,7 @@ def neg_check(vectors, index):
 def convex_check(vectors, index):
     pos_check(vectors,index)
     neg_check(vectors,index)
-    
+
 
 def add_point(vectors, point):
     if !pnpoly(vectors, point):
@@ -264,15 +271,15 @@ for vector in vectors:
     print(vector.x, vector.y, vector.mag )
 # Perform a map to convert all vertices to floating points and user input to float
 # this is the only way to guarantee floating point precision for all operations
-for point in points:
-    map(float, point)
+#for point in points:
+#    map(float, point)
 
 # Get a user to enter a point
-while True:
-    raw_point = input("Enter a point's x and y coordinates: ")
-    usr_point = tuple(map(float,raw_point.split(',')))
-
-    if (pnpoly(points, usr_point) == True):
-        print(colored("The point is within the polygon", 'green'))
-    else:
-        print(colored("The point is NOT within the polygon",'red'))
+#while True:
+#    raw_point = input("Enter a point's x and y coordinates: ")
+#    usr_point = tuple(map(float,raw_point.split(',')))
+#
+#    if (pnpoly(points, usr_point) == True):
+#        print(colored("The point is within the polygon", 'green'))
+#    else:
+#        print(colored("The point is NOT within the polygon",'red'))
