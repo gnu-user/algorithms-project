@@ -118,7 +118,7 @@ def angle_calc(p1,p2,origin):
 # the hull that result in the maximum interior angle
 
 #TODO check if the angle between 2 points results in 0
-#thefore the point to be added is on the line, take the one further
+#therefore the point to be added is on the line, take the one further
 #away and remove the other
 #TODO point at origin, does not work since magnitude is 0
 def max_interior_angle(hull, point):
@@ -174,24 +174,42 @@ def quicksort (list):
 #Need to take the interior angle of the points the new points connects to
 #The check is if the interior angle is <180 given the addition of the new point
 #   IF the angle is < 180 the point is kept
-#   IF the angle is > 180 the point is discarded (thefore the new point is 
+#   IF the angle is > 180 the point is discarded (therefore the new point is 
 #       connected to the point following the given point).
-#       This point is then checked for it's angle to determine if it is also valid, and so on (until conition 1 is met)
+#       This point is then checked for it's angle to determine if it is also valid, and so on (until condition 1 is met)
 #   IF the angle is = 180 then the point is on the same line 
 #       Need to determine how to cover this case
-#       Most likely the point is discarded (since it is on the same line as the other 27s_theorem)
+#       Most likely the point is discarded (since it is on the same line as the other point)
+#Since Dot Product will only return an angle < 180, since it calculates the lowest angle between the vectors
+#Cross product needs to be used to determine whether the orthogonal vector is pointing into or out of the page
+#   IF the orthogonal vector is pointing outside the page
+#       left, down or up
+#   IF the orthogonal vector is pointing into the page
+#       right down or up
 
-#This is broken at the moment because the angle calcuator will alway return angles less than 180 because it is the dot product therefore it is finding the smaller angle.
+#This is broken at the moment because the angle calculator will alway return angles less than 180 because it is the dot product therefore it is finding the smaller angle.
+#def pos_check(vectors, index):
+#    if (float)(angle_calc(vectors[index], vectors[(index+2)%len(vectors)], vectors[(index+1)%len(vectors)])) > pi:
+#        vectors.remove((index+1)%len(vectors))
+#        pos_check(vectors, index)
+
+#def neg_check(vectors, index):
+#    if (float)(angle_calc(vectors[index], vectors[(index-2)%len(vectors)], vectors[(index-1)%len(vectors)])) > pi:
+#        vectors.remove((index-1)%len(vectors))
+#        neg_check(vectors, index)
+
 def pos_check(vectors, index):
-    if (float)(angle_calc(vectors[index], vectors[(index+2)%len(vectors)], vectors[(index+1)%len(vectors)])) > pi:
-        print ("in pos")
-        vectors.remove((index+1)%len(vectors))
-        pos_check(vectors, index)
+    point = vectors[(index+1)%len(vectors)]
+    del(vectors[(index+1)%len(vectors)])
+    if pnpoly(vectors, point):
+        print ("trying to reoccur")
+        #pos_check(vectors, index)
+    else:
+        vectors.insert((index+1)%len(vectors), point)
+
 
 def neg_check(vectors, index):
-    if (float)(angle_calc(vectors[index], vectors[(index-2)%len(vectors)], vectors[(index-1)%len(vectors)])) > pi:
-        vectors.remove((index-1)%len(vectors))
-        neg_check(vectors, index)
+    print ("do nothing")
 
 def convex_check(vectors, index):
     pos_check(vectors,index)
@@ -201,6 +219,8 @@ def convex_check(vectors, index):
 def add_point(vectors, point):
     index = max_interior_angle(vectors, point)
     vectors.insert(index, point)
+    for vector in vectors:
+        print (vector.x, vector.y, vector.mag )
     convex_check(vectors, index)
 
 
@@ -232,7 +252,7 @@ vectors = init_vectors(points)
 add_point(vectors, Vector(3,6))
 
 for vector in vectors:
-    print(vector.x, vector.y, vector.mag, )
+    print(vector.x, vector.y, vector.mag )
 # Perform a map to convert all vertices to floating points and user input to float
 # this is the only way to guarantee floating point precision for all operations
 for point in points:
