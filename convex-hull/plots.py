@@ -7,6 +7,7 @@ import numpy as np
 from matplotlib.pyplot import *
 #from matplotlib.pyplot import plot, ginput, scatter, show, axis, hold
 import matplotlib.lines
+from time import sleep
 
 class Point:
     def __init__(self, x, y):
@@ -39,9 +40,13 @@ points.append(points[0])
 print(points)
 
 # Plot the users input
-plot(
-    [point.x for point in points],
-    [point.y for point in points]
-)
+for i in range(len(points)):
+    plot(
+        [point.x for point in points[:i+1]],
+        [point.y for point in points[:i+1]],
+        color='b', linewidth=1.5, antialiased=True
+    )
+    draw()
+    sleep(0.5)
 
 show()
