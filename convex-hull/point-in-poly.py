@@ -17,7 +17,7 @@
 # http://en.wikipedia.org/wiki/Polygon_triangulation
 # http://www.codeforge.com/article/76159
 #
-from math import sqrt
+from math import sqrt, pi
 from termcolor import colored
 from numpy import dot, arccos
 
@@ -110,9 +110,9 @@ def pnpoly(vertices, point):
    
 # Calculates the angle between 2 vectors in radians
 def angle_calc(p1,p2,origin):
-	a = Vector(p1.x-origin.x, p1.y-origin.y)
-	b = Vector(p2.x-origin.x, p2.y-origin.y)
-	return arccos((dot([a.x,a.y], [b.x,b.y]))/(a.mag*b.mag))
+    a = Vector(p1.x-origin.x, p1.y-origin.y)
+    b = Vector(p2.x-origin.x, p2.y-origin.y)
+    return arccos((dot([a.x,a.y], [b.x,b.y]))/(a.mag*b.mag))
 
 # Returns the index of the first point of the pair vectors within
 # the hull that result in the maximum interior angle
@@ -122,35 +122,37 @@ def angle_calc(p1,p2,origin):
 #away and remove the other
 #TODO point at origin, does not work since magnitude is 0
 def max_interior_angle(hull, point):
-	i = 0
-	j = len(hull) - 1
-	max_angle = 0
-	angle = 0
-	index = -1	#if returns -1 this is invalid!!!!
-	while(i < len(hull)):
-	   angle = angle_calc(hull[j],hull[i], point)
-	   print("point j {}, point i {}, angle {}".format([hull[j].x, hull[j].y], [hull[i].x, hull[i].y], angle))
-	   if (max_angle < angle):
-		   max_angle = angle
-		   index = j
-	   j = i
-	   i += 1
-	return index
+    i = 0
+    j = len(hull) - 1
+    max_angle = 0
+    angle = 0
+    index = -1    #if returns -1 this is invalid!!!!
+    while(i < len(hull)):
+       angle = angle_calc(hull[j],hull[i], point)
+       print("point j {}, point i {}, angle {}".format([hull[j].x, hull[j].y], [hull[i].x, hull[i].y], angle))
+       if (max_angle < angle):
+           max_angle = angle
+           index = i
+       j = i
+       i += 1
+    return index
 
 class Vector:
-	x=0
-	y=0
-	mag=0
-	def __init__(self, x, y):
-		self.x = x
-		self.y = y
-		self.mag = sqrt(self.x**2 + self.y**2)
-	
+    x=0
+    y=0
+    mag=0
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.mag = sqrt(self.x**2 + self.y**2)
+#    def get_point(self):
+#        return [x, y]
+    
 def init_vectors(points):
-	vectors = []
-	for point in points:
-		vectors.append(Vector(point[0], point[1]))
-	return vectors
+    vectors = []
+    for point in points:
+        vectors.append(Vector(point[0], point[1]))
+    return vectors
 
 def quicksort (list):
     """
@@ -167,14 +169,48 @@ def quicksort (list):
         lesser = quicksort([x for x in list[1:] if x.mag < pivot.mag])
         greater = quicksort([x for x in list[1:] if x.mag >= pivot.mag])
         return greater + [pivot] + lesser
-        
+
+
+#Need to take the interior angle of the points the new points connects to
+#The check is if the interior angle is <180 given the addition of the new point
+#   IF the angle is < 180 the point is kept
+#   IF the angle is > 180 the point is discarded (thefore the new point is 
+#       connected to the point following the given point).
+#       This point is then checked for it's angle to determine if it is also valid, and so on (until conition 1 is met)
+#   IF the angle is = 180 then the point is on the same line 
+#       Need to determine how to cover this case
+#       Most likely the point is discarded (since it is on the same line as the other 27s_theorem)
+
+#This is broken at the moment because the angle calcuator will alway return angles less than 180 because it is the dot product therefore it is finding the smaller angle.
+def pos_check(vectors, index):
+    if (float)(angle_calc(vectors[index], vectors[(index+2)%len(vectors)], vectors[(index+1)%len(vectors)])) > pi:
+        print ("in pos")
+        vectors.remove((index+1)%len(vectors))
+        pos_check(vectors, index)
+
+def neg_check(vectors, index):
+    if (float)(angle_calc(vectors[index], vectors[(index-2)%len(vectors)], vectors[(index-1)%len(vectors)])) > pi:
+        vectors.remove((index-1)%len(vectors))
+        neg_check(vectors, index)
+
+def convex_check(vectors, index):
+    pos_check(vectors,index)
+    neg_check(vectors,index)
+    
+
+def add_point(vectors, point):
+    index = max_interior_angle(vectors, point)
+    vectors.insert(index, point)
+    convex_check(vectors, index)
+
+
 #def dot_product(p1,p2,p3):
-	# Use numbpy
+# Use numbpy
 
 #vertices = [(1,3), (3,2), (4,2), (-2,4), (-5,3), (2,-4), (3,-6), (-5,-9), (-4,-5)]
 
 # Square test case, test points on the line, etc..
-points = [(1, 1), (1, 3), (3, 3), (3,1)]
+points = [(1, 1), (1, 3), (2,4), (3, 3), (3,1)]
 
 #triangle test case
 #points = [(2, 10), (2, -4), (-2, -3)]
@@ -186,15 +222,17 @@ vectors = init_vectors(points)
 #print(angle_calc(Vector(0,0),Vector(3,4), Vector(3,2)))
 #index = max_interior_angle(vectors, Vector(3, -1))
 
-index = max_interior_angle(vectors, Vector(3, 3))
+#index = max_interior_angle(vectors, Vector(0, 0))
 
-print(vectors[index].x, vectors[index].y)
-if (index + 1 >= len(vectors)):
-	index = -1
-print(vectors[index+1].x, vectors[index+1].y)
+#print(vectors[index].x, vectors[index].y)
+#if (index + 1 >= len(vectors)):
+#    index = -1
+#print(vectors[index+1].x, vectors[index+1].y)
+
+add_point(vectors, Vector(3,6))
 
 for vector in vectors:
-	print(vector.x, vector.y, vector.mag, "\n")
+    print(vector.x, vector.y, vector.mag, )
 # Perform a map to convert all vertices to floating points and user input to float
 # this is the only way to guarantee floating point precision for all operations
 for point in points:
