@@ -207,6 +207,12 @@ def quicksort (list):
 #next to the point at the given index the point will be within the polygon
 def pos_check(vectors, index):
     point = vectors[(index+1)%len(vectors)]
+    last = False
+    i_last = False
+    if index == len(vectors)-1:
+        last = True
+    elif index == len(vectors)-2:
+        i_last = True
     del(vectors[(index+1)%len(vectors)])
     print (point.x, point.y)
     if pnpoly(vectors, point):
@@ -215,13 +221,21 @@ def pos_check(vectors, index):
         print ("pos", vectors[index].x, vectors[index].y, index)
         pos_check(vectors, index)
     else:
-        vectors.insert((index+1)%len(vectors), point)
+        if i_last:
+            vectors.append(point)
+        else:
+            if last:
+                index = index-1
+            vectors.insert((index+1)%len(vectors), point)
 
 #Through use of pnpoly check if given the remove of the point (at index - 1)
 #next to the point at the given index the point will be within the polygon
 def neg_check(vectors, index):
     point = vectors[(index-1)%len(vectors)]
     del(vectors[(index-1)%len(vectors)])
+    first = False
+    if index == 0:
+        first = True
     print (point.x, point.y)
     if pnpoly(vectors, point):
         if index > ((index-1)%len(vectors)):
@@ -229,7 +243,10 @@ def neg_check(vectors, index):
         print ("neg", vectors[index].x, vectors[index].y, index)
         neg_check(vectors, index)
     else:
-        vectors.insert((index-1)%len(vectors), point)
+        if first:
+            vectors.append(point)
+        else:
+            vectors.insert((index-1)%len(vectors), point)
 
 def convex_check(vectors, index):
     pos_check(vectors,index)
@@ -243,6 +260,8 @@ def add_vertex(hull, point):
         for vertex in hull:
             print(vertex)
         convex_check(hull, index)
+        for vertex in hull:
+            print(vertex)
 
 
 
