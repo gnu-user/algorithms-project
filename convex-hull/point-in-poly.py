@@ -208,10 +208,12 @@ def quicksort (list):
 def pos_check(vectors, index):
     point = vectors[(index+1)%len(vectors)]
     del(vectors[(index+1)%len(vectors)])
-    #print (point.x, point.y)
+    print (point.x, point.y)
     if pnpoly(vectors, point):
-        #print ("pos", vectors[index-1].x, vectors[index-1].y, index-1)
-        pos_check(vectors, index-1)
+        if index > ((index+1)%len(vectors)):
+            index = index-1
+        print ("pos", vectors[index].x, vectors[index].y, index)
+        pos_check(vectors, index)
     else:
         vectors.insert((index+1)%len(vectors), point)
 
@@ -220,10 +222,12 @@ def pos_check(vectors, index):
 def neg_check(vectors, index):
     point = vectors[(index-1)%len(vectors)]
     del(vectors[(index-1)%len(vectors)])
-    #print (point.x, point.y)
+    print (point.x, point.y)
     if pnpoly(vectors, point):
-        #print ("neg", vectors[index-1].x, vectors[index-1].y, index-1)
-        neg_check(vectors, index-1)
+        if index > ((index-1)%len(vectors)):
+            index = index-1
+        print ("neg", vectors[index].x, vectors[index].y, index)
+        neg_check(vectors, index)
     else:
         vectors.insert((index-1)%len(vectors), point)
 
@@ -232,18 +236,18 @@ def convex_check(vectors, index):
     neg_check(vectors,index)
 
 
-def add_point(vectors, point):
-    if not pnpoly(vectors, point):
-        index = max_interior_angle(vectors, point)
-        vectors.insert(index, point)
-        for vector in vectors:
-            print(vector)
-        convex_check(vectors, index)
+def add_vertex(hull, point):
+    if not pnpoly(hull, point):
+        index = max_interior_angle(hull, point)
+        hull.insert(index, point)
+        for vertex in hull:
+            print(vertex)
+        convex_check(hull, index)
 
 
 
 # Initialize the plot axis and title
-axis([0, 10, 0, 10])
+axis([0, 100, 0, 100])
 title('Convex Hull')
 
 # Test case, test points on the line, etc..
@@ -257,27 +261,40 @@ title('Convex Hull')
 #points = [(2, 10), (2, -4), (-2, -3)]
 
 # Generate a set of random points to test
-x_points = randint(8, size=30)
-y_points = randint(8, size=30)
+#x_points = randint(8, size=10)
+#y_points = randint(8, size=10)
+#y_points = rand(2, 10)
 
-for i in range(len(x_points)):
-    x_points[i] += 1
-    y_points[i] += 1
+# Get user input
+user_points = ginput(n=0,timeout=0, show_clicks=True)
 
-points = list(zip(x_points, y_points))
+#for i in range(len(x_points)):
+#    x_points[i] += 1
+#    y_points[i] += 1
+
+#points = list(zip(x_points, y_points))
 # Perform a map to convert all vertices to floating points and user input to float
 # this is the only way to guarantee floating point precision for all operations
-for point in points:
+for point in user_points:
     map(float, point)
     print(point)
 
-vectors = init_vectors(points)
+vectors = init_vectors(user_points)
 
 # Step 1, sort the vectors by magnitude
 vectors = quicksort(vectors)
 
-for vector in vectors:
-    print(vector)
+# Remove duplicate points, we only want distinct points
+vectors_del = []
+for i in range(len(vectors)-1):
+    if (vectors[i].x, vectors[i].y) == (vectors[i+1].x, vectors[i+1].y):
+        print('Duplicate points: ', vectors[i], vectors[i+1])
+        vectors_del.append(i+1)
+
+j = 0
+for i in vectors_del:
+    del vectors[i - j]
+    j += 1
 
 #print(angle_calc(Vector(0,0),Vector(3,4), Vector(3,2)))
 #index = max_interior_angle(vectors, Vector(3, -1))
@@ -289,7 +306,9 @@ for vector in vectors:
 #    index = -1
 #print(vectors[index+1].x, vectors[index+1].y)
 
-#add_point(vectors, Vector(3,6))
+#add_vertex(vectors, Vector(3,6))
+
+
 
 # Plot all of the vectors
 plot(
@@ -302,14 +321,15 @@ plot(
 # the least magnitude, and 2nd greatest magnitude
 hull = [vectors.pop(0), vectors.pop(-1), vectors.pop(0)]
 
-print("POINTS IN HULL")
-for vector in hull:
-    print(vector)
+print("BASE HULL")
+for vertex in hull:
+    print(vertex)
 
 # Now, for each point in the plot add it to convex hull if it satisfies the
 # axioms for a vertex of the hull
+print("\n")
 for vector in vectors:
-    add_point(hull, vector)
+    add_vertex(hull, vector)
 
 
 # Add the first vector in the hull to the end of the hull to simplify plotting
@@ -324,7 +344,8 @@ for i in range(len(hull)):
         color='b', linewidth=1.5, antialiased=True
     )
     draw()
-    #sleep(0.5)
+#    sleep(1.0)
+#del hull[-1]
 
 show()
 
