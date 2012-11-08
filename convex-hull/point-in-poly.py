@@ -16,10 +16,13 @@
 #
 # http://en.wikipedia.org/wiki/Polygon_triangulation
 # http://www.codeforge.com/article/76159
-#
-from math import sqrt, pi
+# 
 from termcolor import colored
-from numpy import dot, arccos
+from numpy import dot, arccos, sqrt
+from numpy.random import *
+from matplotlib.pyplot import *
+import matplotlib.lines
+from time import sleep
 
 # A function which handles the first edge case for the pnpoly algorithm. If
 # a vector lies on the vertical or horizontal edge between two vertices of the
@@ -138,15 +141,13 @@ def max_interior_angle(hull, point):
     return index
 
 class Vector:
-    x=0
-    y=0
-    mag=0
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.mag = sqrt(self.x**2 + self.y**2)
-#    def get_point(self):
-#        return [x, y]
+        self.mag = np.sqrt(self.x**2 + self.y**2)
+
+    def __str__(self):
+        return "(x=%f, y=%f, mag=%f)" % (self.x, self.y, self.mag)
     
 def init_vectors(points):
     vectors = []
@@ -232,28 +233,51 @@ def convex_check(vectors, index):
 
 
 def add_point(vectors, point):
-    if !pnpoly(vectors, point):
+    if not pnpoly(vectors, point):
         index = max_interior_angle(vectors, point)
         vectors.insert(index, point)
         for vector in vectors:
-            print (vector.x, vector.y, vector.mag )
+            print(vector)
         convex_check(vectors, index)
 
 
-#def dot_product(p1,p2,p3):
-# Use numbpy
 
-#vertices = [(1,3), (3,2), (4,2), (-2,4), (-5,3), (2,-4), (3,-6), (-5,-9), (-4,-5)]
+# Initialize the plot axis and title
+axis([0, 10, 0, 10])
+title('Convex Hull')
 
-# Square test case, test points on the line, etc..
-points = [(1, 1), (1, 3), (2,4), (3, 3), (3,1)]
+# Test case, test points on the line, etc..
+#points = [(1, 1), (1, 3), (2,4), (3, 3), (3,1)]
+
+# Test case, random points entered by a simulated user
+#points = [(1, 1), (1, 3), (2,4), (3, 3), (3,1), (3,6)]
+#shuffle(points)
 
 #triangle test case
 #points = [(2, 10), (2, -4), (-2, -3)]
 
+# Generate a set of random points to test
+x_points = randint(8, size=30)
+y_points = randint(8, size=30)
+
+for i in range(len(x_points)):
+    x_points[i] += 1
+    y_points[i] += 1
+
+points = list(zip(x_points, y_points))
+# Perform a map to convert all vertices to floating points and user input to float
+# this is the only way to guarantee floating point precision for all operations
+for point in points:
+    map(float, point)
+    print(point)
+
 vectors = init_vectors(points)
 
-#vectors = quicksort(vectors)
+# Step 1, sort the vectors by magnitude
+vectors = quicksort(vectors)
+
+for vector in vectors:
+    print(vector)
 
 #print(angle_calc(Vector(0,0),Vector(3,4), Vector(3,2)))
 #index = max_interior_angle(vectors, Vector(3, -1))
@@ -265,14 +289,45 @@ vectors = init_vectors(points)
 #    index = -1
 #print(vectors[index+1].x, vectors[index+1].y)
 
-add_point(vectors, Vector(3,6))
+#add_point(vectors, Vector(3,6))
 
+# Plot all of the vectors
+plot(
+    [vector.x for vector in vectors],
+    [vector.y for vector in vectors], 
+    'ro'
+)
+
+# Step 2, create the base hull, which is the greatest magnitude
+# the least magnitude, and 2nd greatest magnitude
+hull = [vectors.pop(0), vectors.pop(-1), vectors.pop(0)]
+
+print("POINTS IN HULL")
+for vector in hull:
+    print(vector)
+
+# Now, for each point in the plot add it to convex hull if it satisfies the
+# axioms for a vertex of the hull
 for vector in vectors:
-    print(vector.x, vector.y, vector.mag )
-# Perform a map to convert all vertices to floating points and user input to float
-# this is the only way to guarantee floating point precision for all operations
-#for point in points:
-#    map(float, point)
+    add_point(hull, vector)
+
+
+# Add the first vector in the hull to the end of the hull to simplify plotting
+hull.append(hull[0])
+
+# Plot the hull
+for i in range(len(hull)):
+    print(hull[i].x, hull[i].y, hull[i].mag )
+    plot(
+        [vertex.x for vertex in hull[:i+1]],
+        [vertex.y for vertex in hull[:i+1]],
+        color='b', linewidth=1.5, antialiased=True
+    )
+    draw()
+    #sleep(0.5)
+
+show()
+
 
 # Get a user to enter a point
 #while True:
