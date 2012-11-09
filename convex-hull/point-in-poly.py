@@ -278,8 +278,9 @@ def add_vertex(hull, point):
 
 
 # Initialize the plot axis and title
-axis([0, 100, 0, 100])
+axis([0, 10, 0, 10])
 title('Convex Hull')
+grid(True)
 
 # Test case, test points on the line, etc..
 #points = [(1, 1), (1, 3), (2,4), (3, 3), (3,1)]
@@ -292,25 +293,29 @@ title('Convex Hull')
 #points = [(2, 10), (2, -4), (-2, -3)]
 
 # Generate a set of random points to test
-#x_points = randint(8, size=10)
-#y_points = randint(8, size=10)
-#y_points = rand(2, 10)
+x_points = randint(8, size=10)
+y_points = randint(8, size=10)
 
 # Get user input
-user_points = ginput(n=0,timeout=0, show_clicks=True)
+#user_points = ginput(n=0,timeout=0, show_clicks=True)
 
-#for i in range(len(x_points)):
-#    x_points[i] += 1
-#    y_points[i] += 1
+# Do this show that is shows the hull being drawn
+user_points = ginput(n=0,timeout=0, show_clicks=False)
 
-#points = list(zip(x_points, y_points))
+# Adjust the point bounds so that they are in the range [1..9]
+for i in range(len(x_points)):
+    x_points[i] += 1
+    y_points[i] += 1
+
+points = list(zip(x_points, y_points))
+
 # Perform a map to convert all vertices to floating points and user input to float
 # this is the only way to guarantee floating point precision for all operations
-for point in user_points:
+for point in points:
     map(float, point)
     print(point)
 
-vectors = init_vectors(user_points)
+vectors = init_vectors(points)
 
 # Step 1, sort the vectors by magnitude
 vectors = quicksort(vectors)
@@ -352,7 +357,7 @@ plot(
 # the least magnitude, and 2nd greatest magnitude
 hull = [vectors.pop(0), vectors.pop(-1), vectors.pop(0)]
 
-print("BASE HULL")
+print("BASE HULL:")
 for vertex in hull:
     print(vertex)
 
@@ -363,23 +368,27 @@ for vector in vectors:
     add_vertex(hull, vector)
 
 
-# Add the first vector in the hull to the end of the hull to simplify plotting
-hull.append(hull[0])
+    # Add the first vector in the hull to the end of the hull to simplify plotting
+    hull.append(hull[0])
 
-# Plot the hull
-for i in range(len(hull)):
-    print(hull[i].x, hull[i].y, hull[i].mag )
-    plot(
-        [vertex.x for vertex in hull[:i+1]],
-        [vertex.y for vertex in hull[:i+1]],
-        color='b', linewidth=1.5, antialiased=True
-    )
-    draw()
-#    sleep(1.0)
-#del hull[-1]
+    # Plot the hull
+    for i in range(len(hull)):
+        print(hull[i].x, hull[i].y, hull[i].mag )
+        plot(
+            [vertex.x for vertex in hull[:i+1]],
+            [vertex.y for vertex in hull[:i+1]],
+            linewidth=1.5, antialiased=True
+        )
+        draw()
+        sleep(0.5)
+    del hull[-1]
 
 show()
 
+
+print("FINAL POINTS IN CONVEX HULL:")
+for vertex in hull:
+    print(vertex)
 
 # Get a user to enter a point
 #while True:
