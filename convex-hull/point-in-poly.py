@@ -203,6 +203,17 @@ def quicksort (list):
 #        neg_check(vectors, index)
 
 
+#DO A CHECK with points i-1, i, i+1 and checks all other points if they are now within the polygon.
+
+def check_poly(vectors, index):
+    i = 0
+    while (i < len(vectors)):
+
+        if pnpoly(vectors[index-1:index+2], vectors[i]) and i != (index-1) and i != index and i != (index +1):
+            print("corner", vectors[i].x, vectors[i].y, vectors[i].mag)
+            del(vectors[i])
+        i+=1
+
 #Through use of pnpoly check if given the remove of the point (at index + 1)
 #next to the point at the given index the point will be within the polygon
 def pos_check(vectors, index):
@@ -251,6 +262,7 @@ def neg_check(vectors, index):
 def convex_check(vectors, index):
     pos_check(vectors,index)
     neg_check(vectors,index)
+    check_poly(vectors,index)
 
 
 def add_vertex(hull, point):
