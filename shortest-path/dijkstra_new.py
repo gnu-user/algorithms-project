@@ -67,12 +67,13 @@ def dijkstra(graph, start, end):
                 # To go to child_node, you have to go through node
                 P[child_node] = cur_node
 
-    # Set a clean path
+    # Initialize the path
     path = []
 
-    # We begin from the end
+    # Begin from the end
     node = end
-    # While we are not arrived at the beginning
+
+    # While the current node is not the start node
     while not (node == start):
         if path.count(node) == 0:
             path.insert(0, node) # Insert the predecessor of the current node
