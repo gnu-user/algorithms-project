@@ -35,7 +35,7 @@
   		\HRule\\[0.60cm]
 			\textsc{\Huge Design and Analysis of Algorithms}\\[0.25cm] 
 			\textsc{\Huge Course Project}\\[0.50cm]
-		\HRule\\[5cm]
+		\HRule\\[6.5cm]
 		\textsc{\LARGE Jonathan Gillett \qquad Joseph Heron}\\[0.65cm]
 		\textsc{\LARGE Amit Jain}\\[6.5cm]
 		\textsc{\LARGE{}\today}\\
@@ -85,7 +85,7 @@ The Monotone Chain algorithm starts by first sorting the points lexicographicall
 
 As part of our research into the Monotone Chain algorithm we first did research into the
 pseudocode for the algorithm, eventually we came across an excellent web article by Dan Sunday,
-which provided detailed pseudocode and explanations of the Monotone Chain algorithm.\cite{website:monotonechainweb}
+which provided detailed pseudocode and explanations of the Monotone Chain Algorithm.\cite{website:monotonechainweb} The following pseudocode for the Monotone Chain Algorithm was used to aid in our own implementation of the algorithm in Python.
 
 \begin{verbatim}
 
@@ -533,6 +533,178 @@ f(n) &= O(nlogn) + O(1) + O(1) + O(n) + O(1) + O(n) + O(1)\\
      &= O(nlogn)
 \end{split}
 \end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% Dijkstra's Algorithm
+\newpage
+\textsc{\Huge Shortest-path Algorithm} \hfill \Lspace
+
+% Description of algorithm (take from wikipedia
+\textsc{\Large Description} \hfill \nspace
+
+The shortest path problem is a well-founded problem in graph theory, which involves trying to find the shortest path between two vertices in the graph. In order to facilitate the concept of length in the shortest path problem the graph is weighted such that the shortest path results in the sum of the weights of each edge being the most minimal.\nspace
+
+There are several known algorithms for solving the shortest path problem, such as Dijkstra's Algorithm, Bellman-Ford Algorithm, and A* Search Algorithm.\lspace
+
+
+
+% Description of algorithm, explanation of the code
+\textsc{\Large Dijkstra's Algorithm} \hfill \nspace
+
+For our project we decided to use Dijkstra's Algorithm, while there are other heuristics-based algorithms which attempt to have better performance. We chose Dijkstra's Algorithm because it still has excellent performance, even in worst case complexity, with $O(|E| + |V| log |V|) $\cite{cormen2001introduction}, where $E$ is the number of edges in the graph, and $V$ is the number of vertices.\nspace
+
+Dijkstra's Algorithm operates by first assigning each vertex a distance value which is used as a weight for the edge. Next, all vertices are marked as unvisited and the initial vertex is marked as current. Then, for each current node calculate the tentative weights or distance of each of it's neighbours that are marked as unvisited, for each distance calculated for the current nodes neighbour, if the distance is less than the previously calculated distance, then overwrite the current distance. Next, when each of the neighbours of the current vertex have been considered mark the current vertex as visited and remove it from the unvisited list. Now, if the destination vertex has been marked as visited then stop, otherwise continue checking the remaining unvisited vertices.\nspace
+
+As part of our research into Dijkstra's Algorithm we looked for detailed explanations of Dijkstra's Algorithm and pseudocode, during our research we found that one of the most detailed and well-explained sources for Dijkstra's Algorithm was from Wikipedia, we used the pseudocode from Wikipedia as a basis for understanding Dijkstra's algorithm and creating our own implementation of Dijkstra's Algorithm in Python.\cite{dijkstrapseudocode}
+
+
+\begin{footnotesize}
+\begin{verbatim}
+ 1  function Dijkstra(Graph, source):
+ 2      for each vertex v in Graph:                            // Initializations
+ 3          dist[v] := infinity ;                              // Unknown distance function from 
+ 4                                                             // source to v
+ 5          previous[v] := undefined ;                         // Previous node in optimal path
+ 6      end for                                                // from source
+ 7      
+ 8      dist[source] := 0 ;                                    // Distance from source to source
+ 9      Q := the set of all nodes in Graph ;                   // All nodes in the graph are
+10                                                             // unoptimized - thus are in Q
+11      while Q is not empty:                                  // The main loop
+12          u := vertex in Q with smallest distance in dist[]; // Start node in first case
+13          remove u from Q ;
+14          if dist[u] = infinity:
+15              break ;                                        // all remaining vertices are
+16          end if                                             // inaccessible from source
+17          
+18          for each neighbor v of u:                          // where v has not yet been 
+19                                                             // removed from Q.
+20              alt := dist[u] + dist_between(u, v) ;
+21              if alt < dist[v]:                              // Relax (u,v,a)
+22                  dist[v] := alt ;
+23                  previous[v] := u ;
+24                  decrease-key v in Q;                       // Reorder v in the Queue
+25              end if
+26          end for
+27      end while
+28  return dist;
+\end{verbatim}
+\end{footnotesize}
+
+
+% Spacing
+\hfill \lspace
+
+% Sample Results
+\textsc{\Large Sample Results} \hfill \nspace
+
+\textsc{\large Sample Result 1} \hfill \nspace
+
+\textsc{Input Values} \hfill \nspace
+
+\begin{verbatim}
+\end{verbatim}
+
+% Spacing
+\hfill \nspace
+\textsc{Shortest Path} \hfill \nspace
+
+\begin{verbatim}
+\end{verbatim}
+
+
+\textsc{Plot} \hfill \nspace
+
+\begin{figure}[h!]
+  \centering
+%	\includegraphics[scale=0.65]{}
+\end{figure}
+
+
+\textsc{\large Sample Result 2} \hfill \nspace
+
+\textsc{Input Values} \hfill \nspace
+
+\begin{verbatim}
+\end{verbatim}
+
+% Spacing
+\hfill \nspace
+\textsc{Shortest Path} \hfill \nspace
+
+\begin{verbatim}
+\end{verbatim}
+
+
+\textsc{Plot} \hfill \nspace
+
+\begin{figure}[h!]
+  \centering
+%	\includegraphics[scale=0.65]{}
+\end{figure}
+
+
+\textsc{\large Sample Result 3} \hfill \nspace
+
+\textsc{Input Values} \hfill \nspace
+
+\begin{verbatim}
+\end{verbatim}
+
+% Spacing
+\hfill \nspace
+\textsc{Shortest Path} \hfill \nspace
+
+\begin{verbatim}
+\end{verbatim}
+
+
+\textsc{Plot} \hfill \nspace
+
+\begin{figure}[h!]
+  \centering
+%	\includegraphics[scale=0.65]{}
+\end{figure}
+
+
+\textsc{\large Sample Result 4} \hfill \nspace
+
+\textsc{Input Values} \hfill \nspace
+
+\begin{verbatim}
+\end{verbatim}
+
+% Spacing
+\hfill \nspace
+\textsc{Shortest Path} \hfill \nspace
+
+\begin{verbatim}
+\end{verbatim}
+
+
+\textsc{Plot} \hfill \nspace
+
+\begin{figure}[h!]
+  \centering
+%	\includegraphics[scale=0.65]{}
+\end{figure}
+
+
+
 
 
 
