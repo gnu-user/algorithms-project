@@ -524,7 +524,7 @@ Once the 2 hulls have been taken they will be merged together. The complexity of
 \newpage
 \textsc{\Large Conclusion} \hfill \nspace
 
-Therefore, given the complexity analysis for each of the operations from 1 to 7 the overall complexity of the Monotone Chain algorithm will be:
+Therefore, given the complexity analysis for each of the operations from 1 to 7 the overall complexity for our implementation of the Monotone Chain algorithm will be:
 
 \begin{equation}
 \begin{split}
@@ -569,7 +569,7 @@ For our project we decided to use Dijkstra's Algorithm, while there are other he
 
 Dijkstra's Algorithm operates by first assigning each vertex a distance value which is used as a weight for the edge. Next, all vertices are marked as unvisited and the initial vertex is marked as current. Then, for each current node calculate the tentative weights or distance of each of it's neighbours that are marked as unvisited, for each distance calculated for the current nodes neighbour, if the distance is less than the previously calculated distance, then overwrite the current distance. Next, when each of the neighbours of the current vertex have been considered mark the current vertex as visited and remove it from the unvisited list. Now, if the destination vertex has been marked as visited then stop, otherwise continue checking the remaining unvisited vertices.\nspace
 
-As part of our research into Dijkstra's Algorithm we looked for detailed explanations of Dijkstra's Algorithm and pseudocode, during our research we found that one of the most detailed and well-explained sources for Dijkstra's Algorithm was from Wikipedia, we used the pseudocode from Wikipedia as a basis for understanding Dijkstra's algorithm and creating our own implementation of Dijkstra's Algorithm in Python.\cite{website:dijkstrapseudocode}
+As part of our research into Dijkstra's Algorithm we looked for detailed explanations of Dijkstra's Algorithm and pseudocode, during our research we found that one of the most detailed and well-explained sources for Dijkstra's Algorithm was from Wikipedia, we used the pseudocode from Wikipedia\cite{website:dijkstrapseudocode} as a basis for understanding Dijkstra's algorithm and creating our own implementation of Dijkstra's Algorithm in Python.
 
 
 \begin{footnotesize}
@@ -617,36 +617,40 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Input Values} \hfill \nspace
 
 \begin{verbatim}
+(`C', `I')
 \end{verbatim}
 
-% Spacing
-\hfill \nspace
+
 \textsc{Shortest Path} \hfill \nspace
 
 \begin{verbatim}
+(`C', `D', `E', `F', `G', `H', `I')
 \end{verbatim}
 
 
-\textsc{Plot} \hfill \nspace
+\textsc{Plot}
 
 \begin{figure}[h!]
   \centering
-%	\includegraphics[scale=0.65]{}
+	\includegraphics[scale=0.60]{img/dijkstra_test_1.png}
 \end{figure}
 
 
+
+\newpage
 \textsc{\large Sample Result 2} \hfill \nspace
 
 \textsc{Input Values} \hfill \nspace
 
 \begin{verbatim}
+(`A', `J')
 \end{verbatim}
 
-% Spacing
-\hfill \nspace
+
 \textsc{Shortest Path} \hfill \nspace
 
 \begin{verbatim}
+(`A', `B', `C', `D', `E', `F', `G', `H', `I', `J')
 \end{verbatim}
 
 
@@ -654,8 +658,9 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 
 \begin{figure}[h!]
   \centering
-%	\includegraphics[scale=0.65]{}
+	\includegraphics[scale=0.60]{img/dijkstra_test_2.png}
 \end{figure}
+
 
 
 \textsc{\large Sample Result 3} \hfill \nspace
@@ -663,6 +668,7 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Input Values} \hfill \nspace
 
 \begin{verbatim}
+(`Q', `T')
 \end{verbatim}
 
 % Spacing
@@ -670,14 +676,15 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Shortest Path} \hfill \nspace
 
 \begin{verbatim}
+(`Q', `R', `S', `T')
 \end{verbatim}
 
-
-\textsc{Plot} \hfill \nspace
+\newpage
+\textsc{Plot}
 
 \begin{figure}[h!]
   \centering
-%	\includegraphics[scale=0.65]{}
+	\includegraphics[scale=0.60]{img/dijkstra_test_3.png}
 \end{figure}
 
 
@@ -686,6 +693,7 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Input Values} \hfill \nspace
 
 \begin{verbatim}
+(`A', `O')
 \end{verbatim}
 
 % Spacing
@@ -693,63 +701,73 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Shortest Path} \hfill \nspace
 
 \begin{verbatim}
+(`A', `B', `C', `O')
 \end{verbatim}
 
-
+\newpage
 \textsc{Plot} \hfill \nspace
 
 \begin{figure}[h!]
   \centering
-%	\includegraphics[scale=0.65]{}
+	\includegraphics[scale=0.60]{img/dijkstra_test_4.png}
 \end{figure}
+
+
+
+
 
 % Complexity Analysis
 \textsc{\Large Complexity Analysis} \hfill \nspace
 
 {\bf \large 1 Initialize the dictionaries and arrays}
 \begin{verbatim}
-D = {}								1
-P = {}								1
+D = {}                              1
+P = {}                              1
 
-for node in graph.keys():			n+1
-        D[node] = -1				n
-        P[node] = ""				n
+for node in graph.keys():           n+1
+        D[node] = -1                n
+        P[node] = ""                n
 
-D[start] = 0						1
+D[start] = 0                        1
 
-unseen_nodes = graph.keys()			1
+unseen_nodes = graph.keys()         1
 \end{verbatim}
 
-The distance and the predecessor dictionaries are initialized to unreachable and empty. The start vertex's distance is set to 0 since it is the starting location. The unseen_nodes array is initialized to contain all nodes since every node is unseen.\lspace
+The distance and the predecessor dictionaries are initialized to unreachable and empty. The start vertex's distance is set to 0 since it is the starting location. The unseen\_nodes array is initialized to contain all nodes since every node is unseen.\lspace
+
 
 {\bf \large 2 Calculate Distances and Predecessors}
 \begin{verbatim}
-while len(unseen_nodes) > 0:									n+1
+while len(unseen_nodes) > 0:                                    n+1
 
-    shortest = None												n
-    cur_node = ''												n
-    for temp_node in unseen_nodes:								sum(j)*
-        if shortest == None:									sum(j-1)
-            shortest = D[temp_node]								sum(1)**
-            cur_node = temp_node								sum(1)
-        elif D[temp_node] < shortest:							sum(j-2)
-            shortest = D[temp_node]								sum(j-2)
-            cur_node = temp_node								sum(j-2)
+    shortest = None                                             n
+    cur_node = ''                                               n
+    for temp_node in unseen_nodes:                              sum(j)*
+        if shortest == None:                                    sum(j-1)
+            shortest = D[temp_node]                             sum(1)**
+            cur_node = temp_node                                sum(1)
+        elif D[temp_node] < shortest:                           sum(j-2)
+            shortest = D[temp_node]                             sum(j-2)
+            cur_node = temp_node                                sum(j-2)
 
-    unseen_nodes.remove(cur_node)								n
+    unseen_nodes.remove(cur_node)                               n
 
-    for child_node, child_value in graph[cur_node].items():		sum(c)`
-        if D[child_node] < D[node] + child_value:				sum(c-1)
-            D[child_node] = D[node] + child_value				sum(m)~
-            P[child_node] = cur_node							sum(m)
+    for child_node, child_value in graph[cur_node].items():     sum(c)***
+        if D[child_node] < D[node] + child_value:               sum(c-1)
+            D[child_node] = D[node] + child_value               sum(m)****
+            P[child_node] = cur_node                            sum(m)
 \end{verbatim}
 
-This section of the code maps out the distance between the parents and their children. This is done in order from shortest distance to largest, and because if initial conditions the start node is the last node to be checked.
-*note that the summations show are from 1 to n
-*Also, note that j is the current size of un_seen_nodes which will decrement each iteration
-**note that the first if structure is the initial condition therefore it will only enter 1 ever time the for loop takes place
-`Please note that c is the number of children that the particular node has. Since this number is completely up to the user the number of iterations can vary greatly. However since a child cannot have it's parent as a child (no recursion) c will be such that c < n and the summation of c < n^2
-~Please note that m is the number of times that the condition is successful, since the condition is based on whether the child has already had a parent node pass through it. m is such that it will be m <= c at all times.\lspace
+This section of the code maps out the distance between the parents and their children. This is done in order from shortest distance to largest, and because if initial conditions the start node is the last node to be checked. Note that the summations show are from 1 to n.\nspace
+
+*Note that j is the current size of un\_seen\_nodes which will decrement each iteration.\nspace
+
+**Note that the first if structure is the initial condition therefore it will only enter 1 ever time the for loop takes place.\nspace
+
+***Please note that c is the number of children that the particular node has. Since this number is completely up to the user the number of iterations can vary greatly. However since a child cannot have it's parent as a child (no recursion) c will be such that $c < n$ and the summation of $c < n^2$.\nspace
+
+****Please note that m is the number of times that the condition is successful, since the condition is based on whether the child has already had a parent node pass through it. m is such that it will be $m <= c$ at all times.\lspace
+
 
 {\bf \large 3 Initialize the path}
 \begin{verbatim}
@@ -759,29 +777,41 @@ node = end						1
 
 Initialize the path to null and the first node to be checked to the end node.\lspace
 
-{\bf \large 5 Find path to start}
+{\bf \large 4 Find path to start}
 \begin{verbatim}
-while not (node == start):					k+1						
-    if path.count(node) == 0:				k
-        path.insert(0, node)				k-1
-        node = P[node]						k-1
-    else:									1
-        break								1
+while not (node == start):                k+1                        
+    if path.count(node) == 0:             k
+        path.insert(0, node)              k-1
+        node = P[node]                    k-1
+    else:                                 1
+        break                             1
 
-path.insert(0, start)						1
-return path									1
+path.insert(0, start)                     1
+return path                               1
 \end{verbatim}
 
-Search for a path to the start node from the end node. Where k is the the number of nodes need to be checked before the start node is found. Given the worse case k will be such k = n therefore k will be k <= n.\lspace
+Search for a path to the start node from the end node. Where k is the the number of nodes need to be checked before the start node is found. Given the worse case k will be such $k = n$ therefore k will be $k <= n$.\lspace
+
+
+
+
+% Conclusion
+\textsc{\Large Conclusion} \hfill \nspace
+
+Therefore, given the complexity analysis for each of the operations from steps 1 to 4 the overall complexity for our implementation of Djikstra's Algorithm will be:
 
 \begin{equation}
 \begin{split}
-f(n) &= O(1) + O(1) + O(n+1) + O(n) + O(n) + O(1) + O(1) + O(n+1) + O(n) + O(n) + O(j)+  O(j-1) +  O(n) +  O(n) +  O(j-2) + O(j-2) + O(j-2) + O(n) + O(c) + O(c-1) + O(m) + O(m) + O(k+1) + O(k) + O(k-1) + O(k-1) + O(k-1) + O(1) + O(1) + O(1) + O(1) \\
+f(n) &= O(1) + O(1) + O(n+1) + O(n) + O(n) + O(1) + O(1) + O(n+1) + O(n) + O(n)\\
+     &+ O(j)+  O(j-1) +  O(n) +  O(n) +  O(j-2) + O(j-2) + O(j-2) + O(n) + O(c)\\
+     &+ O(c-1) + O(m) + O(m) + O(k+1) + O(k) + O(k-1) + O(k-1) + O(k-1) + O(1)\\
+     &+ O(1) + O(1) + O(1)\\
      &= O(14) + O(19n/2) + O(7n^2)\\
      &= O(n^2)
 \end{split}
 \end{equation}
 
+While the complexity for Dijkstra's Algorithm for certain cases has been proven to have a worst-case complexity of $O(|E| + |V| log |V|) $\cite{cormen2001introduction}. The complexity for our implementation of Dijkstra's Algorithm using weighted edges is in fact equivalent to $O(|V|^2)$\cite{barbehenn1998note}, as shown by Michael Barbehenn. Furthermore, due to our implementation of Dijkstra's Algorithm we check every vertex, $V$ equivalently to the size of $N$, this is a limitation of our implementation, which gives our algorithm a worst-case complexity of $O(n^2)$.
 
 \bibliographystyle{ieeetr}
 \bibliography{references}
