@@ -569,7 +569,7 @@ For our project we decided to use Dijkstra's Algorithm, while there are other he
 
 Dijkstra's Algorithm operates by first assigning each vertex a distance value which is used as a weight for the edge. Next, all vertices are marked as unvisited and the initial vertex is marked as current. Then, for each current node calculate the tentative weights or distance of each of it's neighbours that are marked as unvisited, for each distance calculated for the current nodes neighbour, if the distance is less than the previously calculated distance, then overwrite the current distance. Next, when each of the neighbours of the current vertex have been considered mark the current vertex as visited and remove it from the unvisited list. Now, if the destination vertex has been marked as visited then stop, otherwise continue checking the remaining unvisited vertices.\nspace
 
-As part of our research into Dijkstra's Algorithm we looked for detailed explanations of Dijkstra's Algorithm and pseudocode, during our research we found that one of the most detailed and well-explained sources for Dijkstra's Algorithm was from Wikipedia, we used the pseudocode from Wikipedia as a basis for understanding Dijkstra's algorithm and creating our own implementation of Dijkstra's Algorithm in Python.\cite{website:dijkstrapseudocode}
+As part of our research into Dijkstra's Algorithm we looked for detailed explanations of Dijkstra's Algorithm and pseudocode, during our research we found that one of the most detailed and well-explained sources for Dijkstra's Algorithm was from Wikipedia, we used the pseudocode from Wikipedia\cite{website:dijkstrapseudocode} as a basis for understanding Dijkstra's algorithm and creating our own implementation of Dijkstra's Algorithm in Python.
 
 
 \begin{footnotesize}
@@ -617,36 +617,40 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Input Values} \hfill \nspace
 
 \begin{verbatim}
+(`C', `I')
 \end{verbatim}
 
-% Spacing
-\hfill \nspace
+
 \textsc{Shortest Path} \hfill \nspace
 
 \begin{verbatim}
+(`C', `D', `E', `F', `G', `H', `I')
 \end{verbatim}
 
 
-\textsc{Plot} \hfill \nspace
+\textsc{Plot}
 
 \begin{figure}[h!]
   \centering
-%	\includegraphics[scale=0.65]{}
+	\includegraphics[scale=0.60]{img/dijkstra_test_1.png}
 \end{figure}
 
 
+
+\newpage
 \textsc{\large Sample Result 2} \hfill \nspace
 
 \textsc{Input Values} \hfill \nspace
 
 \begin{verbatim}
+(`A', `J')
 \end{verbatim}
 
-% Spacing
-\hfill \nspace
+
 \textsc{Shortest Path} \hfill \nspace
 
 \begin{verbatim}
+(`A', `B', `C', `D', `E', `F', `G', `H', `I', `J')
 \end{verbatim}
 
 
@@ -654,8 +658,9 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 
 \begin{figure}[h!]
   \centering
-%	\includegraphics[scale=0.65]{}
+	\includegraphics[scale=0.60]{img/dijkstra_test_2.png}
 \end{figure}
+
 
 
 \textsc{\large Sample Result 3} \hfill \nspace
@@ -663,6 +668,7 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Input Values} \hfill \nspace
 
 \begin{verbatim}
+(`Q', `T')
 \end{verbatim}
 
 % Spacing
@@ -670,14 +676,15 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Shortest Path} \hfill \nspace
 
 \begin{verbatim}
+(`Q', `R', `S', `T')
 \end{verbatim}
 
-
-\textsc{Plot} \hfill \nspace
+\newpage
+\textsc{Plot}
 
 \begin{figure}[h!]
   \centering
-%	\includegraphics[scale=0.65]{}
+	\includegraphics[scale=0.60]{img/dijkstra_test_3.png}
 \end{figure}
 
 
@@ -686,6 +693,7 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Input Values} \hfill \nspace
 
 \begin{verbatim}
+(`A', `O')
 \end{verbatim}
 
 % Spacing
@@ -693,15 +701,20 @@ As part of our research into Dijkstra's Algorithm we looked for detailed explana
 \textsc{Shortest Path} \hfill \nspace
 
 \begin{verbatim}
+(`A', `B', `C', `O')
 \end{verbatim}
 
-
+\newpage
 \textsc{Plot} \hfill \nspace
 
 \begin{figure}[h!]
   \centering
-%	\includegraphics[scale=0.65]{}
+	\includegraphics[scale=0.60]{img/dijkstra_test_4.png}
 \end{figure}
+
+
+
+
 
 % Complexity Analysis
 \textsc{\Large Complexity Analysis} \hfill \nspace
@@ -798,6 +811,7 @@ f(n) &= O(1) + O(1) + O(n+1) + O(n) + O(n) + O(1) + O(1) + O(n+1) + O(n) + O(n)\
 \end{split}
 \end{equation}
 
+While the complexity for Dijkstra's Algorithm for certain cases has been proven to have a worst-case complexity of $O(|E| + |V| log |V|) $\cite{cormen2001introduction}. The complexity for our implementation of Dijkstra's Algorithm using weighted edges is in fact equivalent to $O(|V|^2)$\cite{barbehenn1998note}, as shown by Michael Barbehenn. Furthermore, due to our implementation of Dijkstra's Algorithm we check every vertex, $V$ equivalently to the size of $N$, this is a limitation of our implementation, which gives our algorithm a worst-case complexity of $O(n^2)$.
 
 \bibliographystyle{ieeetr}
 \bibliography{references}
