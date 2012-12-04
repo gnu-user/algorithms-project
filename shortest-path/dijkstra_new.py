@@ -1,4 +1,4 @@
-import pdb; pdb.set_trace()
+#import pdb; pdb.set_trace()
 def dijkstra(graph, start, end):
     """
     Dijkstra's algorithm Python implementation.
@@ -120,7 +120,7 @@ graph = {   'A' : {'B': 46, 'Q': 105},
 }
 
 
-result = dijkstra(graph, 'Q', 'P')
+result = dijkstra(graph, 'A', 'O')
 
     
 #result = dijkstra(graph, 'T', 'M')
@@ -129,3 +129,4 @@ print(result)
 #test case 1: ['C', 'D', 'E', 'F', 'G', 'H', 'I'] Given: C and I 
 #test case 2: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'] Given A and J
 #test case 3: ['Q', 'R', 'S', 'T'] Given Q and T
+#test case 4: ['A', 'B', 'C', 'O'] Given A and O
