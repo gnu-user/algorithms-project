@@ -1,3 +1,4 @@
+import pdb; pdb.set_trace()
 def dijkstra(graph, start, end):
     """
     Dijkstra's algorithm Python implementation.
@@ -12,7 +13,7 @@ def dijkstra(graph, start, end):
 
     Example:
 
-    >>> graph = {
+    graph = {
     ...     'A': {'B': 10, 'D': 4, 'F': 10},
     ...     'B': {'E': 5, 'J': 10, 'I': 17},
     ...     'C': {'A': 4, 'D': 10, 'E': 16},
@@ -25,43 +26,46 @@ def dijkstra(graph, start, end):
     ...     'J': {'I': 8},
     ... }    
     >>> dijkstra(graph, 'C', 'I')
-    ['C', 'A', 'B', 'I']
+    ['C', 'A', 'B', 'I']"""
 
-    """
+    # Final distances dict
+    D = {}
 
-    D = {} # Final distances dict
-    P = {} # Predecessor dict
+    # Predecessor dict
+    P = {} 
 
     # Fill the dicts with default values
     for node in graph.keys():
         D[node] = -1 # Vertices are unreachable
         P[node] = "" # Vertices have no predecessors
 
-    D[start] = 0 # The start vertex needs no move
+    # The start vertex does not need to move and is reachable
+    D[start] = 0 
 
-    unseen_nodes = graph.keys() # All nodes are unseen
+    # All nodes are unseen
+    unseen_nodes = graph.keys()
 
     while len(unseen_nodes) > 0:
         # Select the node with the lowest value in D (final distance)
         shortest = None
-        node = ''
+        cur_node = ''
         for temp_node in unseen_nodes:
             if shortest == None:
                 shortest = D[temp_node]
-                node = temp_node
+                cur_node = temp_node
             elif D[temp_node] < shortest:
                 shortest = D[temp_node]
-                node = temp_node
+                cur_node = temp_node
 
         # Remove the selected node from unseen_nodes
-        unseen_nodes.remove(node)
+        unseen_nodes.remove(cur_node)
 
         # For each child (ie: connected vertex) of the current node
-        for child_node, child_value in graph[node].items():
+        for child_node, child_value in graph[cur_node].items():
             if D[child_node] < D[node] + child_value:
                 D[child_node] = D[node] + child_value
                 # To go to child_node, you have to go through node
-                P[child_node] = node
+                P[child_node] = cur_node
 
     # Set a clean path
     path = []
@@ -81,37 +85,46 @@ def dijkstra(graph, start, end):
 
 
 # Create a sample graph and call the function
-graph = {   'A':  {'B': 5.9402063753, 'Q': 04.926671928},
-            'B':  {'C': 8.7958679374, 'P': 04.435324655},
-            'C':  {'D': 9.5304250144, 'O': 06.939517724},
-            'D':  {'E': 7.810388475, 'N': 08.443303559},
-            'E':  {'M': 08.555273959, 'F': 3.5281374768},
-            'F':  {'G': 5.0606564596},
-            'G':  {'H': 5.9155801789, 'L': 60.712828614},
-            'H':  {'I': 9.1224553311},
-            'I':  {'J': 4.9699737349},
-            'J':  {'K': 5.8615352385},
-            'K':  {'L': 0.1041666667, 'U': 2.555799753},
-            'L':  {'M': 1.7595021929},
-            'M':  {'N': 2.8862332515, 'Z': 6.3282875344},
-            'N':  {'O': 3.9631593723},
-            'O':  {'P': 7.5503433873},
-            'P':  {'Q': 7.1533978134},
-            'Q':  {'R': 8.0438548358},
-            'R':  {'Z': 92.949743216, 'S': 4.8729988878},
-            'S':  {'Y': 91.417098615},
-            'T':  {'X': 15.640600487},
-            'U':  {'Z': 22.213072771, 'V': 7.5407012208},
-            'V':  {'1': 0.2946414983},
-            'W':  {'3': 66.106357967, 'X': 0.7496429414},
-            'X':  {'2': 69.733326506, 'Y': 3.3866361649},
-            'Y':  {'1': 75.040119719, 'Z': 8.8906828089},
-            'Z':  {},
-            '1':  {'2': 2.306604772},
-            '2':  {'3': 0.327836905},
-            '3':  {}
+
+
+graph = {   'A' : {'B': 46, 'Q': 105},
+            'B' : {'C': 49, 'P': 104},
+            'C' : {'D': 50, 'O': 107},
+            'D' : {'E': 58, 'N': 108},
+            'E' : {'M': 109, 'F': 54},
+            'F' : {'G': 55},
+            'G' : {'H': 26, 'L': 161},
+            'H' : {'I': 29},
+            'I' : {'J': 75},
+            'J' : {'K': 86},
+            'K' : {'L': 50, 'V': 53},
+            'L' : {'M': 62},
+            'M' : {'N': 53, 'U': 56},
+            'N' : {'O': 54},
+            'O' : {'P': 48},
+            'P' : {'Q': 47},
+            'Q' : {'R': 58},
+            'R' : {'U': 193, 'S': 55},
+            'S' : {'T': 191},
+            'T' : {'X': 175, 'U': 59, '2': 53},
+            'U' : {'V': 122},
+            'V' : {'W': 48},
+            'W' : {'X': 60},
+            'X' : {'Y': 52},
+            'Y' : {'Z': 50},
+            'Z' : {'1': 166},
+            '1' : {'2': 51},
+            '2' : {'Y': 170},
+            '3' : {'2': 116}
 }
 
-result = dijkstra(graph, 'Q', 'T')
+
+result = dijkstra(graph, 'Q', 'P')
+
+    
+#result = dijkstra(graph, 'T', 'M')
 
 print(result)
+#test case 1: ['C', 'D', 'E', 'F', 'G', 'H', 'I'] Given: C and I 
+#test case 2: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'] Given A and J
+#test case 3: ['Q', 'R', 'S', 'T'] Given Q and T
