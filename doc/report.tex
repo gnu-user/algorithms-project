@@ -6,10 +6,15 @@
 \usepackage{listings}
 \usepackage{longtable}
 \usepackage{verbatim}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{url}
+\usepackage{listings}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \newcommand{\nspace}{\\[0.25cm]}
 \newcommand{\lspace}{\\[0.50cm]}
 \newcommand{\Lspace}{\\[1.0cm]}
+\newcommand{\LSPACE}{\\[2.0cm]}
 
 
 \title{Design and Analysis of Algorithms Course Project}
@@ -59,17 +64,72 @@ convex hull of a set of points.
 
 The convex hull algorithms are used to determine the convex hull of a finite set of points,
 currently there are several well-known algorithms used to determine the convex hull of a finite
-set of points such as: Jarvis March, Graham Scan, QuickHull, Monotone Chain, Marriage-Before-Conquest, and Chan's Algorithm.  Currently the best algorithmic complexity for the convex hull algorithm is $O(n log h)$, which Chan's algorithm being the most recently published optimal  convex hull algorithm.\nspace
+set of points such as: Jarvis March, Graham Scan, QuickHull, Monotone Chain, Marriage-Before-Conquest, and Chan's Algorithm.  Currently the best algorithmic complexity for the convex hull algorithm is $O(n log h)$, which Chan's algorithm being the most recently published optimal  convex hull algorithm.\cite{chan1996optimal}\nspace
 
-% ADD CITATION FOR BIG-O COMPLEXITY, CHAN'S ALGORITHM
+% ADD CITATION FOR BIG-O COMPLEXITY
 
-For our project we decided to use the Monotone Chain algorithm, which as a worst-case complexity
-of $O(n log n)$, while it is not as optimal as Chan's algorithm or Marriage-Before-Conquest the Monotone Chain algorithm is better understood and more widely used due to the ease of impementation.\lspace
+For our project we decided to use the Monotone Chain algorithm, which has a worst-case complexity
+of $O(n log n)$, while it is not as optimal as Chan's algorithm or Marriage-Before-Conquest the Monotone Chain algorithm is better understood and more widely used due to the ease of impementation.\Lspace
 
 % Citation
 
+
+
 % Description of algorithm, explanation of the code
 \textsc{\Large Monotone Chain Algorithm} \hfill \nspace
+
+For the Monotone Chain algorithm the upper and lower hulls will then be constructed through the use of cross product. The cross product is used to check if adding the point to the hull will case it to have a counter-clockwise turn. In other words, the addition of the point would cause the polygon to no longer be a convex hull since it would contain a concave section.\nspace
+
+The Monotone Chain algorithm starts by first sorting the points lexicographically and then constructs the upper and lower hulls of the points using the cross product to check if adding the points to the hull will cause it to have a counter-clockwise turn. In our implementation we use the QuickSort algorithm to first sort the points and then we use the cross product when constructing the upper and lower hull.\nspace
+
+As part of our research into the Monotone Chain algorithm we first did research into the
+pseudocode for the algorithm, eventually we came across an excellent web article by Dan Sunday,
+which provided detailed pseudocode and explanations of the Monotone Chain algorithm.\cite{website:monotonechainweb}
+
+\begin{verbatim}
+
+Input: a set S = {P = (P.x,P.y)} of N points
+
+    Sort S by increasing x- and then y-coordinate.
+    Let P[] be the sorted array of N points.
+
+    Get the points with 1st x min or max and 2nd y min or max
+      minmin = index of P with min x first and min y second
+      minmax = index of P with min x first and max y second
+      maxmin = index of P with max x first and min y second
+      maxmax = index of P with max x first and max y second
+
+    Compute the lower hull stack as follows:
+    (1) Let L_min be the lower line joining P[minmin] with P[maxmin].
+    (2) Push P[minmin] onto the stack.
+    (3) for i = minmax+1 to maxmin-1  (between the min and max)
+        {
+            if (P[i] is above or on L_min)
+                Ignore it and continue.
+            while (there are at least 2 points on the stack)
+            {
+                Let PT1 = the top point on the stack.
+                Let PT2 = the second point on the stack.
+                if (P[i] is strictly left of the line from PT2 to PT1)
+                    break out of this while loop.
+                Pop the top point PT1 off the stack.
+            }
+            Push P[i] onto the stack.
+        }
+    (4) Push P[maxmin] onto the stack.
+
+    Similarly, compute the upper hull stack.
+
+    Let W = the join of the lower and upper hulls.
+
+    Output: W = the convex hull of S.
+    
+\end{verbatim}
+
+% Spacing
+\hfill \Lspace
+
+
 
 
 % Sample Results
@@ -77,31 +137,360 @@ of $O(n log n)$, while it is not as optimal as Chan's algorithm or Marriage-Befo
 
 \textsc{\large Sample Result 1} \hfill \nspace
 
+\textsc{Input Values} \hfill \nspace
+
+\begin{verbatim}
+(13, 31), (48, 13), (20, 50), (38, 40), (31, 92), (15, 72), (48, 75), 
+(63, 74), (21, 83), (60, 36), (81, 2), (49, 86), (25, 14), (84, 34), 
+(56, 79), (25, 28), (82, 76), (88, 46), (93, 51), (44, 59), (47, 41), 
+(54, 38), (38, 35), (94, 72), (93, 72), (37, 4), (20, 54), (7, 4), 
+(48, 44), (54, 45), (1, 37), (63, 12), (3, 44), (84, 52), (3, 37), 
+(21, 73), (95, 86), (86, 4), (85, 59), (61, 26), (24, 76), (63, 53), 
+(9, 71), (27, 56), (41, 50), (66, 72), (70, 65), (56, 49), (88, 95), 
+(61, 95), (73, 29), (32, 41), (37, 35), (64, 85), (25, 33), (19, 4), 
+(49, 86), (46, 4), (86, 93), (22, 59), (67, 79), (95, 78), (41, 93), 
+(49, 56), (55, 49), (33, 39), (22, 32), (15, 34), (66, 4), (46, 60), 
+(13, 95), (40, 90), (6, 12), (3, 7), (84, 95), (2, 67), (62, 71), 
+(29, 71), (42, 11), (75, 47), (37, 91), (22, 74), (19, 89), (21, 80), 
+(78, 83), (38, 47), (73, 70), (84, 42), (4, 68), (64, 21), (19, 38), 
+(76, 72), (54, 75), (16, 64), (48, 81), (54, 26), (39, 23), (40, 39), 
+(34, 12), (14, 42)
+\end{verbatim}
+
+% Spacing
+\hfill \nspace
+\textsc{Points in Hull} \hfill \nspace
+
+\begin{verbatim}
+(1, 37), (3, 7), (7, 4), (81, 2), (86, 4), (93, 51), (95, 78), (95, 86), 
+(88, 95), (13, 95), (2, 67), (1, 37)
+\end{verbatim}
+
+\newpage
+\textsc{Plot} \hfill \nspace
+
+\begin{figure}[h!]
+  \centering
+	\includegraphics[scale=0.65]{img/monotone_test_1.png}
+\end{figure}
+
+
+
 \textsc{\large Sample Result 2} \hfill \nspace
+
+\textsc{Input Values} \hfill \nspace
+
+\begin{verbatim}
+(4, 3)
+(5, 9)
+(7, 1)
+(2, 7)
+(2, 4)
+(5, 3)
+(5, 7)
+(2, 6)
+(6, 9)
+(3, 2)
+\end{verbatim}
+
+% Spacing
+\hfill \nspace
+\textsc{Points in Hull} \hfill \nspace
+
+\begin{verbatim}
+(2, 4)
+(3, 2)
+(7, 1)
+(6, 9)
+(5, 9)
+(2, 7)
+(2, 4)
+\end{verbatim}
+
+\newpage
+\textsc{Plot} \hfill \nspace
+
+\begin{figure}[h!]
+  \centering
+	\includegraphics[scale=0.65]{img/monotone_test_2.png}
+\end{figure}
+
+
 
 \textsc{\large Sample Result 3} \hfill \nspace
 
+\textsc{Input Values} \hfill \nspace
+
+\begin{verbatim}
+(4.997518610421837, 8.8775510204081627)
+(5.5732009925558312, 8.8520408163265287)
+(6.7047146401985103, 8.6734693877551017)
+(7.4789081885856081, 8.3418367346938762)
+(7.7965260545905704, 7.8571428571428559)
+(7.9553349875930515, 7.5765306122448965)
+(8.0942928039702231, 7.3979591836734677)
+(8.2531017369727042, 6.8877551020408152)
+(8.3722084367245646, 6.4285714285714288)
+(8.5905707196029777, 5.6887755102040813)
+(8.8486352357320097, 4.9489795918367339)
+(9.1464019851116625, 3.7499999999999996)
+(9.3052109181141436, 3.010204081632653)
+(9.2853598014888341, 1.989795918367347)
+(8.9677419354838701, 1.3010204081632653)
+(8.2332506203473947, 0.58673469387755128)
+(7.2009925558312649, 0.2551020408163267)
+(6.5062034739454084, 0.20408163265306145)
+(5.9305210918114142, 0.12755102040816357)
+(5.1960297766749388, 0.2551020408163267)
+(4.4019851116625315, 0.45918367346938793)
+(3.1910669975186106, 0.91836734693877586)
+(3.0322580645161294, 1.0204081632653064)
+(2.9131513647642682, 1.1479591836734695)
+(2.8337468982630276, 1.25)
+(2.694789081885856, 1.4540816326530615)
+(2.5161290322580645, 1.7346938775510203)
+(2.2779156327543424, 2.0918367346938775)
+(2.0397022332506203, 2.5255102040816326)
+(1.9801488833746901, 2.8316326530612241)
+(1.7022332506203477, 3.7755102040816326)
+(1.662531017369727, 4.387755102040817)
+(1.7220843672456576, 5.408163265306122)
+(1.8014888337468982, 7.3724489795918355)
+(1.9007444168734491, 8.0357142857142847)
+(2.1191066997518613, 8.3673469387755084)
+(2.2580645161290325, 8.5459183673469372)
+(2.6550868486352361, 9.0051020408163254)
+(2.9131513647642682, 9.1836734693877542)
+(3.1315136476426804, 9.2346938775510186)
+(3.3895781637717124, 9.2091836734693864)
+(3.6277915632754341, 9.1836734693877542)
+(3.8660049627791566, 9.1836734693877542)
+(4.0248138957816373, 9.1836734693877542)
+(4.1439205955334995, 9.1836734693877542)
+(4.4019851116625315, 9.1326530612244881)
+(4.5210918114143919, 9.1071428571428559)
+(4.6600496277915635, 9.0816326530612237)
+(4.7990074441687351, 9.0306122448979576)
+\end{verbatim}
+
+% Spacing
+\textsc{Points in Hull} \hfill \nspace
+
+\begin{verbatim}
+(x=1.662531, y=4.387755)
+(x=1.702233, y=3.775510)
+(x=2.039702, y=2.525510)
+(x=2.277916, y=2.091837)
+(x=2.694789, y=1.454082)
+(x=2.833747, y=1.250000)
+(x=2.913151, y=1.147959)
+(x=3.032258, y=1.020408)
+(x=3.191067, y=0.918367)
+(x=4.401985, y=0.459184)
+(x=5.196030, y=0.255102)
+(x=5.930521, y=0.127551)
+(x=7.200993, y=0.255102)
+(x=8.233251, y=0.586735)
+(x=8.967742, y=1.301020)
+(x=9.285360, y=1.989796)
+(x=9.305211, y=3.010204)
+(x=9.146402, y=3.750000)
+(x=8.848635, y=4.948980)
+(x=8.253102, y=6.887755)
+(x=8.094293, y=7.397959)
+(x=7.796526, y=7.857143)
+(x=7.478908, y=8.341837)
+(x=6.704715, y=8.673469)
+(x=4.660050, y=9.081633)
+(x=4.143921, y=9.183673)
+(x=3.131514, y=9.234694)
+(x=2.913151, y=9.183673)
+(x=2.655087, y=9.005102)
+(x=2.258065, y=8.545918)
+(x=2.119107, y=8.367347)
+(x=1.900744, y=8.035714)
+(x=1.801489, y=7.372449)
+(x=1.662531, y=4.387755)
+\end{verbatim}
+
+
+
+\textsc{Plot} \hfill \nspace
+
+\begin{figure}[h!]
+  \centering
+	\includegraphics[scale=0.75]{img/monotone_test_3.png}
+\end{figure}
+
+
+
+\newpage
 \textsc{\large Sample Result 4} \hfill \nspace
+
+\textsc{Input Values} \hfill \nspace
+
+\begin{verbatim}
+(2.5359801488833749, 8.3928571428571423)
+(2.5359801488833749, 8.1632653061224474)
+(2.5359801488833749, 7.9591836734693864)
+(2.7543424317617871, 7.1173469387755084)
+(2.5955334987593051, 6.4795918367346932)
+(2.5558312655086852, 5.7908163265306118)
+(2.5558312655086852, 4.8214285714285712)
+(2.5558312655086852, 4.0561224489795915)
+(2.6153846153846154, 3.1887755102040818)
+(2.7940446650124069, 3.1377551020408165)
+(2.9330024813895785, 3.1122448979591835)
+(3.2506203473945408, 3.0612244897959182)
+(3.9255583126550868, 3.0867346938775513)
+(4.1439205955334995, 3.035714285714286)
+(4.7593052109181144, 2.8316326530612241)
+(5.1364764267990068, 2.8571428571428572)
+(5.5334987593052105, 2.8571428571428572)
+(5.7121588089330029, 2.9591836734693877)
+(5.8511166253101745, 2.9081632653061225)
+(5.9900744416873444, 2.9081632653061225)
+(6.0893300248138953, 2.9081632653061225)
+(6.2282878411910669, 2.9336734693877546)
+(6.3275434243176178, 2.9591836734693877)
+(6.5260545905707197, 2.9846938775510208)
+(6.6253101736972706, 3.010204081632653)
+(6.6848635235732008, 3.0612244897959182)
+(6.7047146401985103, 3.3163265306122445)
+(6.744416873449131, 3.8775510204081631)
+(6.7642679900744405, 4.1326530612244898)
+(6.8238213399503724, 5.0510204081632644)
+(6.8635235732009914, 5.841836734693878)
+(6.9032258064516121, 6.454081632653061)
+(6.7642679900744405, 7.1938775510204067)
+(6.8436724565756819, 7.7806122448979576)
+(6.8833746898263026, 8.112244897959183)
+(6.8635235732009914, 8.3418367346938762)
+(6.8238213399503724, 8.6989795918367339)
+(6.6253101736972706, 8.6479591836734677)
+(6.4267990074441688, 8.724489795918366)
+(5.9106699751861047, 8.9540816326530592)
+(5.2754342431761785, 9.0051020408163254)
+(5.1563275434243181, 9.0051020408163254)
+(5.0967741935483879, 9.0051020408163254)
+(4.7791563275434239, 8.9540816326530592)
+(4.6203473945409428, 8.9540816326530592)
+(4.4813895781637711, 8.9795918367346932)
+(4.3622828784119108, 9.0051020408163254)
+(4.2431761786600504, 9.0306122448979576)
+(4.0049627791563278, 9.0306122448979576)
+(3.885856079404467, 9.0306122448979576)
+(3.5880893300248142, 8.9795918367346932)
+(2.7741935483870965, 8.8775510204081627)
+(2.9925558312655087, 8.9795918367346932)
+(3.1513647642679898, 9.0306122448979576)
+\end{verbatim}
+
+% Spacing
+\hfill \nspace
+\textsc{Points in Hull} \hfill \nspace
+
+\begin{verbatim}
+(x=2.535980, y=7.959184)
+(x=2.555831, y=4.056122)
+(x=2.615385, y=3.188776)
+(x=2.794045, y=3.137755)
+(x=2.933002, y=3.112245)
+(x=3.250620, y=3.061224)
+(x=4.759305, y=2.831633)
+(x=5.533499, y=2.857143)
+(x=6.089330, y=2.908163)
+(x=6.526055, y=2.984694)
+(x=6.625310, y=3.010204)
+(x=6.684864, y=3.061224)
+(x=6.704715, y=3.316327)
+(x=6.764268, y=4.132653)
+(x=6.823821, y=5.051020)
+(x=6.903226, y=6.454082)
+(x=6.883375, y=8.112245)
+(x=6.863524, y=8.341837)
+(x=6.823821, y=8.698980)
+(x=5.910670, y=8.954082)
+(x=5.275434, y=9.005102)
+(x=4.243176, y=9.030612)
+(x=3.151365, y=9.030612)
+(x=2.992556, y=8.979592)
+(x=2.774194, y=8.877551)
+(x=2.535980, y=8.392857)
+(x=2.535980, y=7.959184)
+\end{verbatim}
+
+\newpage
+\textsc{Plot} \hfill \nspace
+
+\begin{figure}[h!]
+  \centering
+	\includegraphics[scale=0.65]{img/monotone_test_4.png}
+\end{figure}
+
+
 
 
 % Complexity Analysis
 \textsc{\Large Complexity Analysis} \hfill \nspace
 
+{\bf \large 1 Sorting}
+\begin{verbatim}
+points = sorted(set(points))        nlogn
+\end{verbatim}
+
+Sort the points lexicographically using quick sort, first by x-coordinate and when there is a tie, the points will be sorted by y\-coordinate. Since the fastest sort algorthm that can be employeed is of complexity $O(n log n)$ for average and best case, worse case is however $O(n^2)$.\lspace
+
+
+{\bf \large 2 Single Point Check}
+\begin{verbatim}
+if len(vectors) <= 1:               1
+    return vectors                  1
+\end{verbatim}
+
+An initial check is done for if the given list of points is just a single point. Complexity will be $O(1)$.\lspace
+
+
+{\bf \large 3 Initialize Hull}
+\begin{verbatim}
+lower = []                          1
+\end{verbatim}
+
+Initialize the lower hull's list. The complexity will be O(1).\lspace
+
+
+{\bf \large 4 Compute Upper Hull}
+\begin{verbatim}
+for p in vectors:                                                     n
+    while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:    sum(j)
+        lower.pop()                                                   sum(j-1)
+    lower.append(p)                                                   n                        1
+\end{verbatim}
+
+Where \emph{j} is solely based on the given points. \emph{j} will increase if the next point causes a set of the points to be removed as the addition of the next point will cause the previous points to be no longer valid. \emph{j} will decrease if the next point is valid and the previous point is still valid. \emph{j} will always be such that: $j < n$ and such that the summation of $j < n^2$.\nspace
+
+The complexity of finding the lower hull will be such that the summation will be $O(n)$, because:\nspace
+(BIG-O) g(n) = n + (n + j) + (j-1) + n
+             = 3n + 2j - 1
+             = (BIG-O) n
 
 % Conclusion
 \textsc{\Large Concluding Remarks} \hfill \nspace
 
 
 
-\begin{thebibliography}{9}
+%\begin{thebibliography}{9}
 
-\bibitem{lamport94}
-  Leslie Lamport,
-  \emph{\LaTeX: A Document Preparation System}.
-  Addison Wesley, Massachusetts,
-  2nd Edition,
-  1994.
+%\bibitem{chanslec}
+%  Michael Hoffman,
+%  \emph{\LaTeX: A Document Preparation System}.
+%  Addison Wesley, Massachusetts,
+%  2nd Edition,
+% 1994.
 
-\end{thebibliography}
+%\end{thebibliography}
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
 
 \end{document}
