@@ -1,6 +1,7 @@
 \documentclass[pdftex,12pt,a4paper]{article}
 %\documentclass{report}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{fullpage}
 \usepackage{pdfpages}
 \usepackage{listings}
@@ -451,7 +452,7 @@ if len(vectors) <= 1:               1
 An initial check is done for if the given list of points is just a single point. Complexity will be $O(1)$.\lspace
 
 
-{\bf \large 3 Initialize Hull}
+{\bf \large 3 Initialize Lower Hull}
 \begin{verbatim}
 lower = []                          1
 \end{verbatim}
@@ -459,7 +460,7 @@ lower = []                          1
 Initialize the lower hull's list. The complexity will be O(1).\lspace
 
 
-{\bf \large 4 Compute Upper Hull}
+{\bf \large 4 Compute Lower Hull}
 \begin{verbatim}
 for p in vectors:                                                     n
     while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:    sum(j)
@@ -469,26 +470,78 @@ for p in vectors:                                                     n
 
 Where \emph{j} is solely based on the given points. \emph{j} will increase if the next point causes a set of the points to be removed as the addition of the next point will cause the previous points to be no longer valid. \emph{j} will decrease if the next point is valid and the previous point is still valid. \emph{j} will always be such that: $j < n$ and such that the summation of $j < n^2$.\nspace
 
-The complexity of finding the lower hull will be such that the summation will be $O(n)$, because:\nspace
-(BIG-O) g(n) = n + (n + j) + (j-1) + n
-             = 3n + 2j - 1
-             = (BIG-O) n
+The complexity of finding the lower hull will be such that the summation will be $O(n)$, because:
+
+\begin{equation}
+\begin{split}
+g(n) &= n + (n + j) + (j-1) + n\\
+     &= 3n + 2j - 1\\
+     &= O(n)\\
+\end{split}
+\end{equation}
+		
+		
+{\bf \large 5 Initialize Upper Hull}
+\begin{verbatim}
+upper = []                        1
+\end{verbatim}
+
+Initialize the upper hull's list. The complexity will be will be O(1).\lspace
+
+
+{\bf \large 6 Compute Upper Hull}
+\begin{verbatim}
+for p in reversed(vectors):                                           n
+    while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:    sum(j)
+        upper.pop()                                                   sum(j-1)
+    upper.append(p)
+                    1
+\end{verbatim}
+
+This is very similar to creating the lower hull except the list is traversed in the opposite direction. The complexity of finding the upper hull will be such that the summation will be 
+$O(n)$, because:
+
+\begin{equation}
+\begin{split}
+g(n) &= n + (n + j) + (j-1) + n\\
+     &= 3n + 2j - 1\\
+     &= O(n)\\
+\end{split}
+\end{equation}
+		
+
+{\bf \large 7 Merge Hulls}
+\begin{verbatim}
+return lower[:-1] + upper[:-1]                     1
+\end{verbatim}
+
+Once the 2 hulls have been taken they will be merged together. The complexity of the merge will be $O(1)$.\lspace
+
+
+
 
 % Conclusion
-\textsc{\Large Concluding Remarks} \hfill \nspace
+\newpage
+\textsc{\Large Conclusion} \hfill \nspace
+
+Therefore, given the complexity analysis for each of the operations from 1 to 7 the overall complexity of the Monotone Chain algorithm will be:
+
+\begin{equation}
+\begin{split}
+f(n) &= O(nlogn) + O(1) + O(1) + O(n) + O(1) + O(n) + O(1)\\
+     &= O(nlogn) + O(2n) + O(4)\\
+     &= O(nlogn)
+\end{split}
+\end{equation}
 
 
 
-%\begin{thebibliography}{9}
 
-%\bibitem{chanslec}
-%  Michael Hoffman,
-%  \emph{\LaTeX: A Document Preparation System}.
-%  Addison Wesley, Massachusetts,
-%  2nd Edition,
-% 1994.
 
-%\end{thebibliography}
+
+
+
+
 
 \bibliographystyle{ieeetr}
 \bibliography{references}

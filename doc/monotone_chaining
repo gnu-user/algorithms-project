@@ -3,54 +3,69 @@ Monotone Chaining:
 The upper and lower hulls will then be constructed through the use of cross product. The cross product is used to check if adding the point to the hull will case it to have a counter-clockwise turn. In other words, the addition of the point would cause the polygon to no longer be a convex hull since it would contain a concave section.
 
 <python code>
-points = sorted(set(points))	nlogn
+points = sorted(set(points))    nlogn
 
 1. Sort the points lexicographically using quick sort, first by x-coordinate and when there is a tie, the points will be sorted by y-coordinate. Since the fastest sort algorthm that can be employeed is of complexity (BIG-O) nlogn for average and best case, worse case is however (BIG-O) n^2. 
 
+
+
 <python code>
-if len(vectors) <= 1:			1
-    return vectors				1
+if len(vectors) <= 1:            1
+    return vectors               1
 2. An initial check is done for if the given list of points is just a single point. Complexity will be (BIG-O) 1.
 
+
+
 <python code>
-lower = []						1
+lower = []                        1
 3. Initialize the lower hull's list. The complexity will be (BIG-O) 1.
 
+
+
+
 <python code>
-for p in vectors:														n
-    while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:		sum(j)
-        lower.pop()														sum(j-1)
-    lower.append(p)														n
+for p in vectors:                                                     n
+    while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:    sum(j)
+        lower.pop()                                                   sum(j-1)
+    lower.append(p)                                                   n
 
 *Where 'j' solely based on the given points. 'j' will increase if the next point causes a set of the points to be removed as the addition of the next point will cause the previous points to be no longer valid. 'j' will decrease if the next point is valid and the previous point is still valid. 'j' will always be such that: j < n and such that the summation of j < n^2
+
 4. The complexity of finding the lower hull will be such that the summation will be (BIG-O) n
 Because:
 (BIG-O) g(n) = n + (n + j) + (j-1) + n
-			 = 3n + 2j - 1
-			 = (BIG-O) n
+             = 3n + 2j - 1
+             = (BIG-O) n
+
+
+
 
 <python code> 
 upper = []
 5. Initialize the upper hull's list. The complexity will be (BIG-O) 1
 
+
+
+
 <python code>
-for p in reversed(vectors):												n
-    while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:		sum(j)
-        upper.pop()														sum(j-1)
+for p in reversed(vectors):                                           n
+    while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:    sum(j)
+        upper.pop()                                                   sum(j-1)
     upper.append(p)
 
 *This is very similar to creating the lower hull except the list is traversed in the opposite direction. 
 6. The complexity of finding the upper hull will be such that the summation will be (BIG-O) n
 Because:
 (BIG-O) g(n) = n + (n + j) + (j-1) + n
-			 = 3n + 2j - 1
-			 = (BIG-O) n
+             = 3n + 2j - 1
+             = (BIG-O) n
 
 <python code>
-return lower[:-1] + upper[:-1]											1
+return lower[:-1] + upper[:-1]                                            1
+
 7. Once the 2 hulls have been taken they will be merged together. The complexity of the merge will be (BIG-O) 1.
 
 The overall complexity of the function therefore will be:
 (BIG-O) f(n) = (BIG-O) nlogn + (BIG-O) 1 + (BIG-O) 1 + (BIG-O) n + (BIG-O) 1 + (BIG-O) n + (BIG-O) 1
-			 = (BIG-O) nlogn + (BIG-O) 2n + (BIG-O) 4
-			 = (BIG-O) nlogn
+             = (BIG-O) nlogn + (BIG-O) 2n + (BIG-O) 4
+             = (BIG-O) nlogn
