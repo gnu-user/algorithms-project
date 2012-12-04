@@ -1,7 +1,5 @@
 Dijkstra
 
-The distance be
-
 <python code>
 D = {}								1
 P = {}								1
